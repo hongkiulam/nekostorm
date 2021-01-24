@@ -5,12 +5,9 @@
   import Results from "../organisms/Results.svelte";
   import { parsedQueryString, searchResults, sidebar } from "../../store";
   import { nyaa } from "../../helpers/nyaa";
+  import MainLayout from "../atoms/MainLayout.svelte";
 
-  let suspended = false;
-
-  $: suspended = $querystring === "";
-
-  $: if (!suspended && $querystring) {
+  $: if ($querystring) {
     $searchResults = null;
     nyaa.search($querystring!).then((res) => {
       $searchResults = res;
@@ -36,23 +33,23 @@
     align-items: center;
     height: var(--topbarheight);
   }
-  .suspended {
-    transform: translateY(calc(50vh - 100%));
-  }
 </style>
 
-<div class="home_container">
-  <Topbar
-    on:starclick={() => {
-      $sidebar.left = true;
-    }}
-    on:downloadclick={() => {
-      $sidebar.right = true;
-    }}
-  >
-    <div class="search_suspend_controller" class:suspended>
-      <Search large={suspended} />
-    </div>
-  </Topbar>
-  <Results show={!suspended} />
-</div>
+<MainLayout>
+  <h2 slot="header">Search</h2>
+  <div class="home_container">
+    <Topbar
+      on:starclick={() => {
+        $sidebar.left = true;
+      }}
+      on:downloadclick={() => {
+        $sidebar.right = true;
+      }}
+    >
+      <div class="search_suspend_controller">
+        <Search large={true} />
+      </div>
+    </Topbar>
+    <Results show={!!$searchResults} />
+  </div>
+</MainLayout>
