@@ -1,23 +1,18 @@
 :root {
-  --main-4: #878e9d;
-  --main-3: #636c80;
-  --main-2: #495369;
-  --main-1: #2d3443;
-  --main0: #1c2538;
-  --main1: #10192c;
-  --main2: #060e1d;
-  --success: #8bbeb2;
-  --danger: #bc8da0;
-  --main-gradient-bg: linear-gradient(135deg, var(--main-1), var(--main2));
-  --padding: 0.75rem;
-  --paddingS: 0.5rem;
-  --paddingL: 1.5rem;
-  --heading: 2.5rem;
+  --primary: #133257;
+  --primary-light: #;
+  --primary-dark: #;
+  --black: #131313;
+  --white: #f7f7f7;
+  --success: #0d5743;
+  --warning: #856c14;
+  --danger: #853d14;
+  --spaceS: 12px;
+  --spaceM: 24px;
+  --spaceL: 48px;
+  --heading: 2.25rem;
   --subheading: 1.5rem;
-  --small: 0.85rem;
-
-  --topbariconarea: calc(24px + (var(--padding) * 2));
-  --topbarheight: var(--topbariconarea);
+  --small: 0.8125rem;
 }
 
 * {
@@ -34,14 +29,25 @@ body {
 }
 
 body {
-  color: var(--main-4);
-  font-family: "Raleway", sans-serif;
-  background: var(--main-gradient-bg);
+  color: var(--black);
+  font-family: "Lato", sans-serif;
+  background: var(--white);
   font-size: 16px;
 }
 
+h1 {
+  font-size: var(--heading);
+}
+
+h2 {
+  font-size: var(--subheading);
+}
+small {
+  font-size: var(--small);
+}
+
 a {
-  color: rgb(0, 100, 200);
+  color: inherit;
   text-decoration: none;
 }
 
@@ -50,7 +56,7 @@ a:hover {
 }
 
 a:visited {
-  color: rgb(0, 80, 160);
+  color: inherit;
 }
 
 label {
@@ -63,42 +69,25 @@ select,
 textarea {
   font-family: inherit;
   font-size: inherit;
-  background: var(--main-2);
   border: 0;
-  padding: 0.4em;
-  border-radius: 5px;
-  color: var(--main-4);
   outline: none !important;
 }
 
-input:disabled {
-  color: #ccc;
+input:disabled,
+button:disabled {
+  opacity: 0.5;
 }
 
 input[type="range"] {
   height: 0;
 }
-input::placeholder {
-  color: var(--main-4);
-}
 
 button {
-  color: #333;
+  color: inherit;
   background-color: #f4f4f4;
   outline: none;
 }
 
-button:disabled {
-  color: #999;
-}
-
-button:not(:disabled):active {
-  background: var(--main0);
-}
-
-button:focus {
-  border-color: #666;
-}
 h1,
 h2,
 h3 {
@@ -109,5 +98,5 @@ h3 {
   height: 2px;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: var(--main2);
+  background-color: var(--primary);
 }
