@@ -1,8 +1,6 @@
 <script lang="ts">
   import { querystring } from "svelte-spa-router";
   import Topbar from "../atoms/Topbar.svelte";
-  import SavedSearchesSidebar from "../organisms/SavedSearchesSidebar.svelte";
-  import TorrentSidebar from "../organisms/TorrentSidebar.svelte";
   import Search from "../molecules/Search.svelte";
   import Results from "../organisms/Results.svelte";
   import { parsedQueryString, searchResults, sidebar } from "../../store";
@@ -58,6 +56,3 @@
   </Topbar>
   <Results show={!suspended} />
 </div>
-<!-- Sidebars -->
-<SavedSearchesSidebar bind:open={$sidebar.left} />
-<TorrentSidebar bind:open={$sidebar.right} />
