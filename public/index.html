@@ -45,5 +45,10 @@
         });
       }
     </script>
+    <script>
+      if (localStorage.getItem('nekostorm-darkmode') === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    </script>
   </body>
 </html>

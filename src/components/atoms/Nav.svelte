@@ -31,8 +31,8 @@
     opacity: 0.5;
   }
   :global(a.active, button.active) {
-    background: var(--white);
-    color: var(--primary);
+    background: var(--copy-bg);
+    color: var(--copy);
     opacity: 1 !important;
   }
 </style>

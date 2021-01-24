@@ -1,7 +1,7 @@
 :root {
   --primary: #133257;
-  --primary-light: #;
-  --primary-dark: #;
+  --primary-light: #46658a;
+  --primary-dark: #021124;
   --black: #131313;
   --white: #f7f7f7;
   --success: #0d5743;
@@ -15,6 +15,15 @@
   --small: 0.8125rem;
 }
 
+html {
+  --copy: var(--black);
+  --copy-bg: var(--white);
+}
+
+html[data-theme="dark"] {
+  --copy: var(--white);
+  --copy-bg: var(--primary-dark);
+}
 * {
   margin: 0;
   padding: 0;
@@ -29,9 +38,9 @@ body {
 }
 
 body {
-  color: var(--black);
+  color: var(--copy);
   font-family: "Lato", sans-serif;
-  background: var(--white);
+  background: var(--copy-bg);
   font-size: 16px;
 }
 
