@@ -6,10 +6,9 @@
   import SidebarItem from "./SidebarItem.svelte";
 
   import { formatFileSize } from "../../helpers/format";
-  import { torrents } from "../../store/customStores/torrents";
+  import { torrents } from "../../store/torrents";
   import type { TorrentInstance, TorrentStatus } from "../../types/torrent";
   import { push } from "svelte-spa-router";
-  import { sidebar } from "../../store";
 
   export let torrent: TorrentInstance;
 
@@ -87,7 +86,6 @@
   title={torrent.searchResult.name}
   subtitle="{peers} peers"
   on:click={() => {
-    $sidebar.right = false;
     push("/torrents/" + torrent.searchResult.id);
   }}
 >

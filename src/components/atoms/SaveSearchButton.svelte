@@ -1,8 +1,8 @@
 <script lang="ts">
   import { fly } from "svelte/transition";
   import { StarIcon } from "svelte-feather-icons";
-  import { parsedQueryString } from "../../store";
-  import { savedSearches } from "../../store/customStores/savedSearches";
+  import { parsedQueryString } from "../../store/basic";
+  import { savedSearches } from "../../store/savedSearches";
 
   let isSaved = false;
   $: {

@@ -6,8 +6,7 @@
 
   import { capitalise } from "../../helpers/format";
   import { objToQueryString } from "../../helpers/query";
-  import { sidebar } from "../../store";
-  import { savedSearches } from "../../store/customStores/savedSearches";
+  import { savedSearches } from "../../store/savedSearches";
   import type { SavedSearch } from "../../types/savedSearch";
   import { sortOptions } from "../../helpers/constants";
 
@@ -43,9 +42,9 @@
 <SidebarItem
   title={capitalise(savedSearch.q)}
   on:click={() => {
-    $sidebar.left = false;
-    push('/?' + objToQueryString(savedSearch));
-  }}>
+    push("/?" + objToQueryString(savedSearch));
+  }}
+>
   <div slot="body">
     {#each pills as pill}
       <Pill>{pill}</Pill>
@@ -56,7 +55,8 @@
       class="icon_wrapper"
       on:click|preventDefault|stopPropagation={() => {
         savedSearches.remove(savedSearch);
-      }}>
+      }}
+    >
       <TrashIcon size="24" />
     </div>
   </div>

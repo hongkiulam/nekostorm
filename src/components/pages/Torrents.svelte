@@ -3,7 +3,7 @@
   import { fade } from "svelte/transition";
   import TorrentSidebarItem from "../molecules/TorrentSidebarItem.svelte";
   import type { TorrentInstance } from "../../types/torrent";
-  import { torrents } from "../../store/customStores/torrents";
+  import { torrents } from "../../store/torrents";
 
   $: {
     console.log($torrents);

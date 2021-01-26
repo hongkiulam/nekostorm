@@ -1,8 +1,8 @@
 <script lang="ts">
   import { fade } from "svelte/transition";
   import { DownloadIcon, CheckIcon } from "svelte-feather-icons";
-  import { searchResults, sidebar } from "../../store";
-  import { torrents } from "../../store/customStores/torrents";
+  import { searchResults } from "../../store/basic";
+  import { torrents } from "../../store/torrents";
   import type { NyaaTorrent } from "../../types/torrent";
   import Pill from "../atoms/Pill.svelte";
   import { formatFileSize } from "../../helpers/format";
@@ -71,10 +71,10 @@
         class:check={torrentAlreadyAdded(torrent)}
         on:click|stopPropagation={() => {
           if (!torrents.exists(torrent.magnet)) {
-            $sidebar.right = true;
             torrents.add(torrent);
           }
-        }}>
+        }}
+      >
         {#if torrentAlreadyAdded(torrent)}
           <div in:fade>
             <CheckIcon size="24" />

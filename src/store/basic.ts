@@ -17,4 +17,3 @@ export const parsedQueryString = readable<QueryObject | null>(null, (set) => {
     }
   });
 });
-export const sidebar = writable({ left: false, right: false });

@@ -3,7 +3,7 @@
   import { flip } from "svelte/animate";
   import SavedSearchSidebarItem from "../molecules/SavedSearchSidebarItem.svelte";
 
-  import { savedSearches } from "../../store/customStores/savedSearches";
+  import { savedSearches } from "../../store/savedSearches";
   import { objToQueryString } from "../../helpers/query";
 </script>
 

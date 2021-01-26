@@ -1,7 +1,7 @@
 <script lang="ts">
   import Select from "../atoms/Select.svelte";
   import Input from "../atoms/Input.svelte";
-  import { parsedQueryString, searchResults } from "../../store";
+  import { parsedQueryString, searchResults } from "../../store/basic";
   import { updateQuery } from "../../helpers/query";
   import { sortOptions } from "../../helpers/constants";
 
@@ -58,7 +58,8 @@
     data={pageData}
     on:select={handlePageChange}
     value={{ label: page, value: page }}
-    isClearable={false} />
+    isClearable={false}
+  />
   <Input placeholder="Username" on:change={handleUsernameChange} value={user} />
   <Select
     placeholder="Sort By"
@@ -66,5 +67,6 @@
     data={sortOptions}
     on:select={handleSortChange}
     value={sortValue}
-    isClearable={false} />
+    isClearable={false}
+  />
 </div>

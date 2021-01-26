@@ -1,9 +1,11 @@
 import { push } from "svelte-spa-router";
 import { get } from "svelte/store";
-import { parsedQueryString } from "../store";
+import { parsedQueryString } from "../store/basic";
 
-export const objToQueryString = (queryParams: { [key: string]: string }) => {
-  const queryString = Object.entries(queryParams)
+export const objToQueryString = (
+  queryParams: { [key: string]: string } | null
+) => {
+  const queryString = Object.entries(queryParams || {})
     .map(([key, val]) => key + "=" + val)
     .join("&");
   return queryString;

@@ -1,6 +1,6 @@
 import { get, writable } from "svelte/store";
-import { /*electronStore,*/ wtClient } from "../index";
-import type { Torrent, NyaaTorrent } from "../../types/torrent";
+import { /*electronStore,*/ wtClient } from "./basic";
+import type { Torrent, NyaaTorrent } from "../types/torrent";
 
 const useTorrents = () => {
   const torrents = writable<Torrent>({});

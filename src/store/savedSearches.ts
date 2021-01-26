@@ -1,6 +1,6 @@
 import { get, writable } from "svelte/store";
-import { objToQueryString } from "../../helpers/query";
-import type { SavedSearch } from "../../types/savedSearch";
+import { objToQueryString } from "../helpers/query";
+import type { SavedSearch } from "../types/savedSearch";
 
 const savedSearchStorageKey = "nyaaclient-savedSearches";
 const useSavedSearch = () => {
@@ -19,7 +19,7 @@ const useSavedSearch = () => {
     });
     savedSearches.set(removed);
   };
-  const exists = (search: SavedSearch) => {
+  const exists = (search: SavedSearch | null) => {
     const found = get(savedSearches).some((sS) => {
       const stringToFind = objToQueryString(search);
       const stringInStore = objToQueryString(sS);

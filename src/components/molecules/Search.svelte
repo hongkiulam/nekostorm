@@ -2,11 +2,10 @@
   import { push } from "svelte-spa-router";
   import { SearchIcon } from "svelte-feather-icons";
   import Input from "../atoms/Input.svelte";
-  import { parsedQueryString } from "../../store";
+  import { parsedQueryString } from "../../store/basic";
   import { updateQuery } from "../../helpers/query";
   import SaveSearchButton from "../atoms/SaveSearchButton.svelte";
 
-  export let large: boolean = false;
   export let value: string = "";
 
   const search = () => {
@@ -57,13 +56,11 @@
 </style>
 
 <form class="search_bar" on:submit|preventDefault={search}>
-  <Input {large} bind:value placeholder="Search Anime . . ." />
-  {#if !large}
-    <div class="save_search_button_position">
-      <SaveSearchButton />
-    </div>
-  {/if}
+  <Input bind:value placeholder="Search Anime . . ." />
+  <div class="save_search_button_position">
+    <SaveSearchButton />
+  </div>
   <button class="search_button">
-    <SearchIcon size={large ? "36" : "24"} />
+    <SearchIcon size="24" />
   </button>
 </form>
