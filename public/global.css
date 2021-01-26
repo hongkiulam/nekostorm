@@ -7,9 +7,10 @@
   --success: #0d5743;
   --warning: #856c14;
   --danger: #853d14;
-  --spaceS: 12px;
-  --spaceM: 24px;
-  --spaceL: 48px;
+  --u: 12px;
+  --u2: calc(var(--u) * 2);
+  --u3: calc(var(--u) * 3);
+  --u4: calc(var(--u) * 4);
   --heading: 2.25rem;
   --subheading: 1.5rem;
   --small: 0.8125rem;

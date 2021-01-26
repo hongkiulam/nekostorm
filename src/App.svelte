@@ -20,7 +20,7 @@
     height: 100%;
     overflow: hidden;
     display: grid;
-    grid-template-columns: [nav] var(--spaceL) [main] 1fr;
+    grid-template-columns: [nav] var(--u4) [main] 1fr;
   }
 </style>
 

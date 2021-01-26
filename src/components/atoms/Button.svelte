@@ -12,8 +12,8 @@
     justify-content: center;
     background: var(--button-color);
     color: var(--white);
-    height: var(--spaceM);
-    padding: 0 var(--spaceS);
+    height: var(--u2);
+    padding: 0 var(--u);
     line-height: 1rem;
     cursor: pointer;
   }

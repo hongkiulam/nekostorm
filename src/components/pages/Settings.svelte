@@ -17,7 +17,7 @@
 
 <style lang="scss">
   article > :global(* + *) {
-    margin-top: var(--spaceS);
+    margin-top: var(--u);
   }
 </style>
 

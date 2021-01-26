@@ -20,8 +20,8 @@
   }
   a,
   button {
-    width: var(--spaceL);
-    height: var(--spaceL);
+    width: var(--u4);
+    height: var(--u4);
     display: flex;
     align-items: center;
     justify-content: center;
