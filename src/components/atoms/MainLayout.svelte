@@ -1,10 +1,14 @@
-<style>
+<style lang="scss">
+  @import "src/styles/global";
   main {
     margin: 0 var(--u4);
     display: grid;
     grid-template-rows: [header] auto [section] 1fr [footer] auto;
     height: 100%;
     overflow: hidden;
+    @include media(sm) {
+      margin: 0 var(--u2);
+    }
   }
   header {
     display: flex;

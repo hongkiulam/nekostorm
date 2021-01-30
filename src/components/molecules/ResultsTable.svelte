@@ -21,7 +21,8 @@
   $: torrents = results?.torrents || [];
 </script>
 
-<style>
+<style lang="scss">
+  @import "src/styles/global";
   .scroll-container {
     display: flex;
     flex-direction: column;
@@ -39,6 +40,12 @@
     color: var(--copy-primary);
     background: var(--copy-bg);
     padding-bottom: var(--u);
+    @include media(sm) {
+      &[data-header="size"],
+      &[data-header="date"] {
+        display: none;
+      }
+    }
   }
   th + th {
     padding-left: var(--u);
@@ -49,13 +56,13 @@
   <table>
     <thead>
       <tr>
-        <th>Source</th>
-        <th>Name</th>
-        <th>Size</th>
-        <th>Seeders</th>
-        <th>Leechers</th>
-        <th>Date</th>
-        <th><!-- download icon --></th>
+        <th data-header="source">Source</th>
+        <th data-header="name">Name</th>
+        <th data-header="size">Size</th>
+        <th data-header="seeder">Seeders</th>
+        <th data-header="leecher">Leechers</th>
+        <th data-header="date">Date</th>
+        <th data-header="dl"><!-- download icon --></th>
       </tr>
     </thead>
     <tbody>

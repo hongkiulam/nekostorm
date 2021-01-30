@@ -18,6 +18,7 @@
 </script>
 
 <style lang="scss">
+  @import "src/styles/global";
   tr:hover {
     background: linear-gradient(
         rgba(124, 124, 124, 0.2),
@@ -35,33 +36,40 @@
     & + td {
       padding-left: var(--u);
     }
+    &[data-cell="name"] {
+      white-space: normal;
+    }
+    &[data-cell="seeder"] {
+      color: var(--success);
+    }
+    &[data-cell="leecher"] {
+      color: var(--danger);
+    }
+    &[data-cell="dl"] {
+      cursor: pointer;
+    }
+
+    @include media(sm) {
+      &[data-cell="size"],
+      &[data-cell="date"] {
+        display: none;
+      }
+    }
   }
 
-  .wrap {
-    white-space: normal;
-  }
-  .pointer {
-    cursor: pointer;
-  }
   .isDownloaded {
     color: var(--success);
-  }
-  .seeder {
-    color: var(--success);
-  }
-  .leecher {
-    color: var(--danger);
   }
 </style>
 
 <tr>
-  <td {...cp}><em>NySi</em></td>
-  <td class="wrap" {...cp}>{item.name}</td>
-  <td {...cp}>{formatFileSize(item.filesize)}</td>
-  <td class="seeder" {...cp}>{item.seeders}</td>
-  <td class="leecher" {...cp}>{item.leechers}</td>
-  <td {...cp}>{formatDate(item.date)}</td>
-  <td {...cp} class="pointer" class:isDownloaded on:click={download}
+  <td data-cell="source" {...cp}><em>NySi</em></td>
+  <td data-cell="name" {...cp}>{item.name}</td>
+  <td data-cell="size" {...cp}>{formatFileSize(item.filesize)}</td>
+  <td data-cell="seeder" {...cp}>{item.seeders}</td>
+  <td data-cell="leecher" {...cp}>{item.leechers}</td>
+  <td data-cell="date" {...cp}>{formatDate(item.date)}</td>
+  <td data-cell="dl" {...cp} class:isDownloaded on:click={download}
     >{#if isDownloaded}
       <CheckIcon size={`${Number(size.u) * 1.5}`} />
     {:else}

@@ -7,12 +7,20 @@
 </script>
 
 <style lang="scss">
+  @import "src/styles/global";
   .search-header {
     display: grid;
     grid-template-columns: auto 1fr auto;
     gap: var(--u);
     align-items: center;
     width: 100%;
+
+    @include media(sm) {
+      grid-template-columns: 1fr;
+      h2 {
+        display: none;
+      }
+    }
   }
   .placeholder {
     color: transparent;
