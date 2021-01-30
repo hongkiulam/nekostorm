@@ -1,20 +1,44 @@
 <script lang="ts">
   import { push } from "svelte-spa-router";
-  import { SearchIcon } from "svelte-feather-icons";
+  import { SearchIcon, FilterIcon, StarIcon } from "svelte-feather-icons/src";
   import Input from "../atoms/Input.svelte";
   import { parsedQueryString } from "../../store/basic";
   import { updateQuery } from "../../helpers/query";
-  import SaveSearchButton from "../atoms/SaveSearchButton.svelte";
+  import { savedSearches } from "../../store/savedSearches";
 
   export let value: string = "";
+  let isSaved = false;
 
+  /** Functions */
   const search = () => {
     if (value) {
       updateQuery({ q: value });
     }
   };
+
+  const captureEnter = (e: KeyboardEvent) => {
+    if (e.key === "Enter") {
+      search();
+    }
+  };
+
+  const toggleSaveSearch = () => {
+    if (isSaved) {
+      savedSearches.remove($parsedQueryString);
+    } else {
+      savedSearches.add($parsedQueryString);
+    }
+    isSaved = !isSaved;
+  };
+
+  /** Reactive Statements */
   $: if (value === "") {
     push("/");
+  }
+
+  $: {
+    isSaved = savedSearches.exists($parsedQueryString);
+    $savedSearches; // savedSearches as dependency
   }
 
   // assign to act as a memoiser
@@ -24,43 +48,49 @@
 </script>
 
 <style lang="scss">
-  $searchButtonWidth: 5em;
-
-  .search_bar {
+  form {
     position: relative;
     width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
   }
-  %button {
+  .button-container {
     position: absolute;
-    height: 100%;
-    color: inherit;
-    cursor: pointer;
-    :global(svg) {
-      height: 100%;
-    }
-  }
-  .search_button {
-    @extend %button;
     right: 0;
-    padding: 0 var(--paddingS);
-    background: var(--main-1);
-    width: $searchButtonWidth;
-  }
-  .save_search_button_position {
-    @extend %button;
-    right: $searchButtonWidth;
-    background: transparent;
-    display: inline-block;
-    padding: 0 var(--paddingS);
+    top: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    button {
+      background: transparent;
+      color: var(--copy-primary);
+      &.isSaved {
+        color: var(--warning);
+      }
+    }
+
+    :global(svg) {
+      cursor: pointer;
+    }
+    :global(* + *) {
+      margin-left: var(--u);
+    }
   }
 </style>
 
-<form class="search_bar" on:submit|preventDefault={search}>
+<form
+  on:submit|preventDefault={search}
+  on:keydown={captureEnter}
+  id="search-form"
+>
   <Input bind:value placeholder="Search Anime . . ." />
-  <div class="save_search_button_position">
-    <SaveSearchButton />
+  <div class="button-container">
+    {#if searchQuery}
+      <button on:click|preventDefault><FilterIcon size="24" /></button>
+      <button class:isSaved on:click|preventDefault={toggleSaveSearch}
+        ><StarIcon size="24" /></button
+      >
+    {/if}
+    <button><SearchIcon size="24" /></button>
   </div>
-  <button class="search_button">
-    <SearchIcon size="24" />
-  </button>
 </form>

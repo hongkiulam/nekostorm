@@ -1,17 +1,17 @@
 <script lang="ts">
   export let value: string;
-  export let large: boolean = false;
   export let placeholder: string = "";
 </script>
 
 <style lang="scss">
   input {
+    height: var(--u3);
+    padding: 0 var(--u);
+    background: transparent;
+    border-bottom: 1px solid var(--primary);
     width: 100%;
-    transition: all 0.3s ease;
-  }
-  .large {
-    font-size: var(--heading);
+    color: var(--copy);
   }
 </style>
 
-<input class:large type="text" bind:value {placeholder} on:change />
+<input type="text" bind:value {placeholder} on:change />

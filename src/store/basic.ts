@@ -1,4 +1,4 @@
-import { readable, writable } from "svelte/store";
+import { derived, readable, writable } from "svelte/store";
 import { querystring } from "svelte-spa-router";
 import { parse } from "query-string";
 import type { SearchResponse } from "../types/nyaa";
@@ -10,10 +10,6 @@ export const wtClient = (window as any).WebTorrent
   : undefined;
 
 export const searchResults = writable<SearchResponse | null>(null);
-export const parsedQueryString = readable<QueryObject | null>(null, (set) => {
-  querystring.subscribe((qs) => {
-    if (qs) {
-      set(parse(qs) as QueryObject);
-    }
-  });
+export const parsedQueryString = derived(querystring, ($qs) => {
+  return parse($qs || "") as QueryObject;
 });

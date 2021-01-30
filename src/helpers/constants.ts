@@ -12,3 +12,10 @@ export const sortOptions = [
   { label: "Downloads (Descending)", value: "7|false" },
   { label: "Downloads (Ascending)", value: "7|true" },
 ];
+
+export const size = {
+  u: "12",
+  u2: "24",
+  u3: "36",
+  u4: "48",
+};

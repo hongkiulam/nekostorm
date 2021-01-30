@@ -6,4 +6,7 @@ export type Colors =
   | "white"
   | "success"
   | "danger"
-  | "warning";
+  | "warning"
+  | "copy"
+  | "copy-bg"
+  | "copy-primary";

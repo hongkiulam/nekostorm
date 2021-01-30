@@ -1,23 +1,9 @@
 <script lang="ts">
   import { querystring } from "svelte-spa-router";
-  import Topbar from "../atoms/Topbar.svelte";
+  import ResultsTable from "../molecules/ResultsTable.svelte";
+  import ResultPaginator from "../atoms/ResultPaginator.svelte";
   import Search from "../molecules/Search.svelte";
-  import Results from "../organisms/Results.svelte";
-  import { parsedQueryString, searchResults } from "../../store/basic";
-  import { nyaa } from "../../helpers/nyaa";
   import MainLayout from "../atoms/MainLayout.svelte";
-
-  $: if ($querystring) {
-    $searchResults = null;
-    nyaa.search($querystring!).then((res) => {
-      $searchResults = res;
-    });
-  } else {
-    $searchResults = null;
-  }
-  $: {
-    console.table($parsedQueryString);
-  }
 </script>
 
 <style lang="scss">
@@ -25,14 +11,15 @@
     display: grid;
     grid-template-columns: auto 1fr auto;
     gap: var(--u);
+    align-items: center;
     width: 100%;
   }
   .placeholder {
     color: transparent;
   }
-  .home_container {
+  .table-container {
     display: grid;
-    grid-template-rows: auto 1fr;
+    grid-template-rows: auto var(--u2);
     height: 100%;
   }
 </style>
@@ -43,7 +30,10 @@
     <Search />
     <h2 class="placeholder">Search</h2>
   </div>
-  <div class="home_container">
-    <Results show={!!$searchResults} />
-  </div>
+  {#if $querystring}
+    <div class="table-container">
+      <ResultsTable />
+      <ResultPaginator />
+    </div>
+  {/if}
 </MainLayout>

@@ -4,6 +4,7 @@
     display: grid;
     grid-template-rows: [header] auto [section] 1fr [footer] auto;
     height: 100%;
+    overflow: hidden;
   }
   header {
     display: flex;
@@ -15,6 +16,9 @@
     display: flex;
     align-items: center;
     height: var(--u4);
+  }
+  section {
+    overflow: hidden;
   }
 </style>
 

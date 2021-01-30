@@ -2,7 +2,7 @@ import { get, writable } from "svelte/store";
 import { objToQueryString } from "../helpers/query";
 import type { SavedSearch } from "../types/savedSearch";
 
-const savedSearchStorageKey = "nyaaclient-savedSearches";
+const savedSearchStorageKey = "nekostorm-savedSearches";
 const useSavedSearch = () => {
   const initialValue = localStorage.getItem(savedSearchStorageKey);
   const savedSearches = writable<SavedSearch[]>(

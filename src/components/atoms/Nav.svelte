@@ -7,6 +7,11 @@
     SettingsIcon,
   } from "svelte-feather-icons/src";
   import active from "svelte-spa-router/active";
+  import { location, querystring } from "svelte-spa-router";
+  import { size } from "../../helpers/constants";
+
+  const searchRegexp = /(\/\?.*)|(\/)$/g;
+  $: path = $location + "?" + $querystring;
 </script>
 
 <style lang="scss">
@@ -32,28 +37,30 @@
   }
   :global(a.active, button.active) {
     background: var(--copy-bg);
-    color: var(--copy);
+    color: var(--copy-primary);
     opacity: 1 !important;
   }
 </style>
 
 <nav>
   <div class="top">
-    <a href="#/" use:active={{ path: "/" }}><SearchIcon size="24" /></a>
+    <a href="#/" class={path.match(searchRegexp) ? "active" : ""}
+      ><SearchIcon size={size.u2} /></a
+    >
     <a href="#/starred" use:active={{ path: "/starred" }}
-      ><StarIcon size="24" /></a
+      ><StarIcon size={size.u2} /></a
     >
     <a href="#/torrents" use:active={{ path: "/torrents" }}
-      ><DownloadCloudIcon size="24" /></a
+      ><DownloadCloudIcon size={size.u2} /></a
     >
     <button class="disabled" use:active={{ path: "/torrents/*" }}
-      ><DropletIcon size="24" /></button
+      ><DropletIcon size={size.u2} /></button
     >
   </div>
 
   <div class="bottom">
     <a href="#/settings" use:active={{ path: "/settings" }}
-      ><SettingsIcon size="24" /></a
+      ><SettingsIcon size={size.u2} /></a
     >
   </div>
 </nav>
