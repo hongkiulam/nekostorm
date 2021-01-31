@@ -4,10 +4,13 @@
   import ResultPaginator from "../atoms/ResultPaginator.svelte";
   import Search from "../molecules/Search.svelte";
   import MainLayout from "../atoms/MainLayout.svelte";
+  import FilterModal from "../molecules/FilterModal.svelte";
+
+  let modalOpen = false;
 </script>
 
 <style lang="scss">
-  @import "src/styles/global";
+  @import "../../styles/global";
   .search-header {
     display: grid;
     grid-template-columns: auto 1fr auto;
@@ -35,7 +38,11 @@
 <MainLayout>
   <div slot="header" class="search-header">
     <h2>Search</h2>
-    <Search />
+    <Search
+      on:filterclick={() => {
+        modalOpen = true;
+      }}
+    />
     <h2 class="placeholder">Search</h2>
   </div>
   {#if $querystring}
@@ -44,4 +51,5 @@
       <ResultPaginator />
     </div>
   {/if}
+  <FilterModal bind:open={modalOpen} />
 </MainLayout>

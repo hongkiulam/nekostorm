@@ -13,6 +13,12 @@ export const sortOptions = [
   { label: "Downloads (Ascending)", value: "7|true" },
 ];
 
+export const sourceOptions = [
+  { label: "Animetosho", value: "animetosho" },
+  { label: "Nyaa Si", value: "nyaasi" },
+  { label: "Nyaa Pantsu", value: "nyaapantsu" },
+];
+
 export const size = {
   u: "12",
   u2: "24",

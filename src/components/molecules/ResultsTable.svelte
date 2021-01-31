@@ -22,7 +22,7 @@
 </script>
 
 <style lang="scss">
-  @import "src/styles/global";
+  @import "../../styles/global";
   .scroll-container {
     display: flex;
     flex-direction: column;

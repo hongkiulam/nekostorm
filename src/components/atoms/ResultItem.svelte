@@ -18,7 +18,7 @@
 </script>
 
 <style lang="scss">
-  @import "src/styles/global";
+  @import "../../styles/global";
   tr:hover {
     background: linear-gradient(
         rgba(124, 124, 124, 0.2),

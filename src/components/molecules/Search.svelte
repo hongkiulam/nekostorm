@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
   import { push } from "svelte-spa-router";
   import { SearchIcon, FilterIcon, StarIcon } from "svelte-feather-icons/src";
   import Input from "../atoms/Input.svelte";
@@ -7,6 +8,7 @@
   import { savedSearches } from "../../store/savedSearches";
 
   export let value: string = "";
+  const dispatch = createEventDispatcher();
   let isSaved = false;
 
   /** Functions */
@@ -86,7 +88,11 @@
   <Input bind:value placeholder="Search Anime . . ." />
   <div class="button-container">
     {#if searchQuery}
-      <button on:click|preventDefault><FilterIcon size="24" /></button>
+      <button
+        on:click|preventDefault={() => {
+          dispatch("filterclick");
+        }}><FilterIcon size="24" /></button
+      >
       <button class:isSaved on:click|preventDefault={toggleSaveSearch}
         ><StarIcon size="24" /></button
       >

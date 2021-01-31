@@ -4,5 +4,6 @@ export interface QueryObject {
   user: string;
   sort: string;
   order: string;
+  source: string;
   [key: string]: string;
 }

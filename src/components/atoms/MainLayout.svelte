@@ -1,5 +1,5 @@
 <style lang="scss">
-  @import "src/styles/global";
+  @import "../../styles/global";
   main {
     margin: 0 var(--u4);
     display: grid;

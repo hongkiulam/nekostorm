@@ -25,6 +25,7 @@
     "sass": "^1.32.5",
     "snowpack": "^3.0.1",
     "svelte-feather-icons": "^3.3.0",
+    "svelte-masonry": "0.0.17",
     "svelte-preprocess": "^4.0.8",
     "svelte-select": "^3.16.1",
     "svelte-spa-router": "^3.1.0",
