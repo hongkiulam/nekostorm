@@ -8,9 +8,9 @@ require("./_types/adapter");
 const pantsu = async (query) => {
   const url = new URL("https://feed.animetosho.org/json");
   url.searchParams.append("only_tor", 1);
-  url.searchParams.append("filter%5B0%5D%5Bt%5D", "nyaa_class");
+  url.searchParams.append("filter[0][t]", "nyaa_class");
   url.searchParams.append(
-    "filter%5B0%5D%5Bv%5D",
+    "filter[0][v]",
     query.trusted === "true" ? "trusted" : "remake"
   );
   url.searchParams.append("q", query.q);
