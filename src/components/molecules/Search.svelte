@@ -88,12 +88,12 @@
 >
   <Input bind:value placeholder="Search Anime . . ." />
   <div class="button-container">
+    <button
+      on:click|preventDefault={() => {
+        dispatch("filterclick");
+      }}><FilterIcon size="24" /></button
+    >
     {#if searchQuery}
-      <button
-        on:click|preventDefault={() => {
-          dispatch("filterclick");
-        }}><FilterIcon size="24" /></button
-      >
       <button class:isSaved on:click|preventDefault={toggleSaveSearch}
         ><StarIcon size="24" /></button
       >

@@ -1,21 +1,25 @@
 <script lang="ts">
   import { querystring } from "svelte-spa-router";
+  import { Diamonds } from "svelte-loading-spinners";
 
   import { nekoFetch } from "../../helpers/api";
+  import { size } from "../../helpers/constants";
   import type { APITorrent } from "../../types/api";
 
   import { parsedQueryString } from "../../store/basic";
   import ResultItem from "../atoms/ResultItem.svelte";
 
   let results: APITorrent[] = [];
-  $: console.log($parsedQueryString);
+  let loading = false;
 
-  $: if ($querystring) {
-    results = [];
+  $: if ($parsedQueryString.q) {
+    loading = true;
     nekoFetch($querystring!).then((res) => {
       results = res;
+      loading = false;
     });
   } else {
+    loading = false;
     results = [];
   }
 </script>
@@ -49,6 +53,19 @@
   th + th {
     padding-left: var(--u);
   }
+
+  .loading-overlay {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--copy-bg);
+    opacity: 0.5;
+  }
 </style>
 
 <div class="scroll-container">
@@ -71,3 +88,12 @@
     </tbody>
   </table>
 </div>
+{#if loading}
+  <article class="loading-overlay">
+    <Diamonds
+      size={Number(size.u4) * 2}
+      color="var(--copy-primary)"
+      unit="px"
+    />
+  </article>
+{/if}

@@ -32,6 +32,7 @@
     display: grid;
     grid-template-rows: auto var(--u2);
     height: 100%;
+    position: relative;
   }
 </style>
 
@@ -45,7 +46,7 @@
     />
     <h2 class="placeholder">Search</h2>
   </div>
-  {#if $querystring}
+  {#if $querystring?.includes("q=")}
     <div class="table-container">
       <ResultsTable />
       <ResultPaginator />
