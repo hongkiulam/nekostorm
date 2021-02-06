@@ -14,6 +14,12 @@
     border-bottom: 1px solid var(--primary);
     width: 100%;
     color: var(--copy);
+    box-shadow: 0px 3px transparent;
+    transition: box-shadow 0.3s ease;
+    &:hover,
+    &:focus {
+      box-shadow: 0px 1px var(--primary);
+    }
   }
   select option {
     color: black;

@@ -22,8 +22,10 @@
 <style>
   nav {
     margin-left: auto;
-    display: flex;
+    display: grid;
+    grid-auto-flow: column;
     align-items: center;
+    gap: var(--u);
   }
   span {
     line-height: var(--u2);

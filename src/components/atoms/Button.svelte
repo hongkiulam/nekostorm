@@ -6,7 +6,9 @@
   export let dense: boolean = false;
 </script>
 
-<style>
+<style lang="scss">
+  $unfocussedShadow: inset 0px 0px 10px transparent;
+  $focussedShadow: inset 0px 0px 0px 1px; // no color
   button {
     display: flex;
     align-items: center;
@@ -17,6 +19,12 @@
     padding: 0 var(--u);
     line-height: 1rem;
     cursor: pointer;
+    box-shadow: $unfocussedShadow, $unfocussedShadow;
+    transition: box-shadow 0.3s ease;
+    &:hover {
+      box-shadow: $focussedShadow rgba(255, 255, 255, 0.5),
+        $focussedShadow var(--button-color);
+    }
   }
   .inverted {
     background: transparent;
