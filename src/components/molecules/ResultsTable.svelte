@@ -1,24 +1,23 @@
 <script lang="ts">
-  import { nyaa } from "../../helpers/nyaa";
-
   import { querystring } from "svelte-spa-router";
+
+  import { nekoFetch } from "../../helpers/api";
+  import type { APITorrent } from "../../types/api";
+
   import { parsedQueryString } from "../../store/basic";
   import ResultItem from "../atoms/ResultItem.svelte";
-  import type { SearchResponse } from "src/types/nyaa";
 
-  let results: SearchResponse | null;
+  let results: APITorrent[] = [];
   $: console.log($parsedQueryString);
 
   $: if ($querystring) {
-    results = null;
-    nyaa.search($querystring!).then((res) => {
+    results = [];
+    nekoFetch($querystring!).then((res) => {
       results = res;
     });
   } else {
-    results = null;
+    results = [];
   }
-
-  $: torrents = results?.torrents || [];
 </script>
 
 <style lang="scss">
@@ -66,7 +65,7 @@
       </tr>
     </thead>
     <tbody>
-      {#each torrents as result}
+      {#each results as result}
         <ResultItem item={result} />
       {/each}
     </tbody>

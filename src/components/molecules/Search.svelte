@@ -20,6 +20,7 @@
 
   const captureEnter = (e: KeyboardEvent) => {
     if (e.key === "Enter") {
+      e.preventDefault();
       search();
     }
   };

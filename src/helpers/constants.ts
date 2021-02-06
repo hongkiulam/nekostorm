@@ -1,22 +1,21 @@
 export const sortOptions = [
-  { label: "Date (Descending) - Default", value: "2|false" },
-  { label: "Date (Ascending)", value: "2|true" },
-  { label: "Name (Descending)", value: "1|false" },
-  { label: "Name (Ascending)", value: "1|true" },
-  { label: "Size (Descending)", value: "4|false" },
-  { label: "Size (Ascending)", value: "4|true" },
-  { label: "Seeders (Descending)", value: "5|false" },
-  { label: "Seeders (Ascending)", value: "5|true" },
-  { label: "Leechers (Descending)", value: "6|false" },
-  { label: "Leechers (Ascending)", value: "6|true" },
-  { label: "Downloads (Descending)", value: "7|false" },
-  { label: "Downloads (Ascending)", value: "7|true" },
+  { label: "Date (Descending) - Default", value: "date|false" },
+  { label: "Date (Ascending)", value: "date|true" },
+  { label: "Size (Descending)", value: "size|false" },
+  { label: "Size (Ascending)", value: "size|true" },
+  { label: "Seeders (Descending)", value: "seeders|false" },
+  { label: "Seeders (Ascending)", value: "seeders|true" },
 ];
 
 export const sourceOptions = [
   { label: "Animetosho", value: "animetosho" },
   { label: "Nyaa Si", value: "nyaasi" },
   { label: "Nyaa Pantsu", value: "nyaapantsu" },
+];
+
+export const trustedOptions = [
+  { label: "All results", value: "" },
+  { label: "Trusted only", value: "true" },
 ];
 
 export const size = {

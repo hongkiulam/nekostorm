@@ -2,8 +2,11 @@ export interface QueryObject {
   q: string;
   page: string;
   user: string;
-  sort: string;
-  order: string;
-  source: string;
+  sort: SortOptions;
+  order: "true" | "false";
+  source: "nyaapantsu" | "nyaasi" | "animetosho";
+  trusted: string;
   [key: string]: string;
 }
+
+export type SortOptions = "date" | "size" | "seeders";

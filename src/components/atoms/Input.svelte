@@ -3,6 +3,7 @@
   export let placeholder: string = "";
   export let select = false;
   export let options: { label: string; value: string }[] = [];
+  export let disabled: boolean = false;
 </script>
 
 <style lang="scss">
@@ -24,14 +25,18 @@
   select option {
     color: black;
   }
+  .disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
 </style>
 
 {#if select}
-  <select bind:value>
+  <select bind:value class:disabled>
     {#each options as { label, value }}
       <option {value}>{label}</option>
     {/each}
   </select>
 {:else}
-  <input type="text" bind:value {placeholder} on:change />
+  <input type="text" bind:value {placeholder} on:change class:disabled />
 {/if}

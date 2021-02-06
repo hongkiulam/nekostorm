@@ -1,10 +1,10 @@
 <script lang="ts">
   import { formatFileSize } from "../../helpers/format";
-  import type { NyaaTorrent } from "../../types/torrent";
+  import type { APITorrent } from "../../types/api";
   import { DownloadCloudIcon, CheckIcon } from "svelte-feather-icons/src";
   import { size } from "../../helpers/constants";
 
-  export let item: NyaaTorrent;
+  export let item: APITorrent;
 
   let isDownloaded = false;
 
@@ -63,9 +63,9 @@
 </style>
 
 <tr>
-  <td data-cell="source" {...cp}><em>NySi</em></td>
+  <td data-cell="source" {...cp}><em>{item.source}</em></td>
   <td data-cell="name" {...cp}>{item.name}</td>
-  <td data-cell="size" {...cp}>{formatFileSize(item.filesize)}</td>
+  <td data-cell="size" {...cp}>{formatFileSize(Number(item.filesize))}</td>
   <td data-cell="seeder" {...cp}>{item.seeders}</td>
   <td data-cell="leecher" {...cp}>{item.leechers}</td>
   <td data-cell="date" {...cp}>{formatDate(item.date)}</td>
