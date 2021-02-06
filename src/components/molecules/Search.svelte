@@ -14,7 +14,7 @@
   /** Functions */
   const search = () => {
     if (value) {
-      updateQuery({ q: value });
+      updateQuery({ q: value, page: "1" });
     }
   };
 

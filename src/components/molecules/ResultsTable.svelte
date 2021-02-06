@@ -6,21 +6,26 @@
   import { size } from "../../helpers/constants";
   import type { APITorrent } from "../../types/api";
 
-  import { parsedQueryString } from "../../store/basic";
+  import { parsedQueryString, searchResults } from "../../store/basic";
   import ResultItem from "../atoms/ResultItem.svelte";
 
-  let results: APITorrent[] = [];
   let loading = false;
 
   $: if ($parsedQueryString.q) {
     loading = true;
-    nekoFetch($querystring!).then((res) => {
-      results = res;
-      loading = false;
-    });
+    nekoFetch($querystring!)
+      .then((res) => {
+        $searchResults = res;
+      })
+      .catch(() => {
+        $searchResults = [];
+      })
+      .finally(() => {
+        loading = false;
+      });
   } else {
     loading = false;
-    results = [];
+    $searchResults = [];
   }
 </script>
 
@@ -45,7 +50,8 @@
     padding-bottom: var(--u);
     @include media(sm) {
       &[data-header="size"],
-      &[data-header="date"] {
+      &[data-header="date"],
+      &[data-header="source"] {
         display: none;
       }
     }
@@ -82,7 +88,7 @@
       </tr>
     </thead>
     <tbody>
-      {#each results as result}
+      {#each $searchResults as result}
         <ResultItem item={result} />
       {/each}
     </tbody>

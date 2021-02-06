@@ -51,7 +51,8 @@
 
     @include media(sm) {
       &[data-cell="size"],
-      &[data-cell="date"] {
+      &[data-cell="date"],
+      &[data-cell="source"] {
         display: none;
       }
     }

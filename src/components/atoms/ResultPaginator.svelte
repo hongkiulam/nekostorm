@@ -4,7 +4,7 @@
   import { size } from "../../helpers/constants";
   import { updateQuery } from "../../helpers/query";
 
-  import { parsedQueryString } from "../../store/basic";
+  import { parsedQueryString, searchResults } from "../../store/basic";
 
   $: page = $parsedQueryString?.page || "1";
 
@@ -38,7 +38,9 @@
   <Button dense inverted color="copy-primary" on:click={updatePage("down")}
     ><ChevronLeftIcon size={size.u2} /></Button
   >
-  <Button dense inverted color="copy-primary" on:click={updatePage("up")}
-    ><ChevronRightIcon size={size.u2} /></Button
-  >
+  {#if $searchResults.length === 75}
+    <Button dense inverted color="copy-primary" on:click={updatePage("up")}
+      ><ChevronRightIcon size={size.u2} /></Button
+    >
+  {/if}
 </nav>
