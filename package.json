@@ -6,6 +6,8 @@
     "dev": "netlify dev"
   },
   "dependencies": {
+    "axios": "^0.21.1",
+    "nyaapi": "^2.3.3",
     "svelte": "^3.24.0"
   },
   "devDependencies": {

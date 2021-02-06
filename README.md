@@ -1,10 +1,12 @@
 # NekoStorm
 
-##### Nyaa torrent-based anime search and torrenting application
+##### Anime-torrent search and torrenting application
 
-Using the [Nyaa Pantsu API](https://nyaa.net/apidoc) and [WebTorrent](https://webtorrent.io/) to search and download anime torrents.
+Uses [AnimeTosho](https://animetosho.org/), [Nyaa Pantsu API](https://nyaa.net/apidoc) and [Nyaapi](https://github.com/Kylart/Nyaapi) to search for torrents.
 
-_Built with Svelte, Typescript, Scss, Snowpack_
+[WebTorrent](https://webtorrent.io/) for client-side torrenting
+
+_Built with Svelte, Typescript, Scss, Snowpack, WebTorrent_
 
 ---
 
