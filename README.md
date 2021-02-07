@@ -4,9 +4,13 @@
 
 Uses [AnimeTosho](https://animetosho.org/), [Nyaa Pantsu API](https://nyaa.net/apidoc) and [Nyaapi](https://github.com/Kylart/Nyaapi) to search for torrents.
 
-[WebTorrent](https://webtorrent.io/) for client-side torrenting
+~~[WebTorrent](https://webtorrent.io/) for client-side torrenting~~
 
-_Built with Svelte, Typescript, Scss, Snowpack, WebTorrent_
+Client-side torrenting did not work as expected, mostly due to me not reading the docs properly. Most torrents failed to find peers as it turns out they must also be seeding via WebRTC.
+
+The app was migrated to Electron as a result since this boasts full node integration.
+
+_Built with Svelte, Typescript, Scss, Snowpack, WebTorrent, Electron_
 
 ---
 
