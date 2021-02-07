@@ -16,6 +16,7 @@
  * @property {string} user
  * @property {string} page
  * @property {'true'} trusted
+ * @property {'nyaasi' | 'nyaapantsu' | 'animetosho'=} source
  */
 
 /**
@@ -30,7 +31,7 @@
 
 /**
  * @typedef {Object} NekoResponse
- * @property {string} id
+ * @property {number} id
  * @property {string} name
  * @property {string} hash
  * @property {string} date

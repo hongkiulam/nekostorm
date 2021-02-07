@@ -1,6 +1,6 @@
 const axios = require("axios");
-const sanitise = require("./_sanitisers/pantsu");
-require("./_types/adapter");
+const sanitise = require("../_sanitisers/pantsu");
+require("../_types/adapter");
 
 /**
  * @type {Object.<string, number>}

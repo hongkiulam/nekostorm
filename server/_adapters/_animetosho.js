@@ -1,6 +1,6 @@
 const axios = require("axios");
-const sanitise = require("./_sanitisers/animetosho");
-require("./_types/adapter");
+const sanitise = require("../_sanitisers/animetosho");
+require("../_types/adapter");
 
 /**
  * @type { Adapter }
@@ -21,7 +21,7 @@ const pantsu = async (query) => {
   url.searchParams.append("order", order);
   url.searchParams.append("page", query.page || 1);
   try {
-    /**@type {Array<import('./_types/vendor').AnimeToshoTorrent>} */
+    /**@type {Array<import('../_types/vendor').AnimeToshoTorrent>} */
     const data = (await axios(url.toString())).data;
 
     /**@type {Array<NekoResponse>} */

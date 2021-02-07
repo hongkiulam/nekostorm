@@ -1,6 +1,6 @@
 const nyaapi = require("nyaapi");
-const sanitise = require("./_sanitisers/si");
-require("./_types/adapter");
+const sanitise = require("../_sanitisers/si");
+require("../_types/adapter");
 
 /**
  * @type { Adapter }
@@ -22,7 +22,7 @@ const si = async (query) => {
     searchFunction = nyaapi.si.searchByUser;
   }
   try {
-    /**@type {Array<import("./_types/vendor").NyaaSiTorrent>} */
+    /**@type {Array<import("../_types/vendor").NyaaSiTorrent>} */
     const data = await searchFunction(opts);
 
     /**@type {Array<NekoResponse>} */

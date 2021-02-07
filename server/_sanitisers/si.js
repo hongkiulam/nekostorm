@@ -10,7 +10,7 @@ const sanitise = (nyaasi) => {
     return undefined;
   }
   return {
-    id: nyaasi.id,
+    id: Number(nyaasi.id),
     name: nyaasi.name,
     hash: nyaasi.hash,
     date: nyaasi.date,
