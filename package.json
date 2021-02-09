@@ -7,7 +7,7 @@
     "name": "Haydon Lam",
     "email": "lamhaydon@gmail.com"
   },
-  "main": "src/electron",
+  "main": "src/electron/main",
   "scripts": {
     "start": "snowpack dev",
     "build": "snowpack build",
@@ -15,7 +15,7 @@
     "dev": "netlify dev",
     "electron:start": "electron-forge start",
     "electron:run": "npm run electron:start -- -- dev",
-    "electron:serve": "npm run dev",
+    "electron:serve": "npm start",
     "electron": "concurrently 'npm run electron:run' 'npm run electron:serve'"
   },
   "config": {
@@ -49,7 +49,8 @@
     "axios": "^0.21.1",
     "electron-squirrel-startup": "^1.0.0",
     "nyaapi": "^2.3.3",
-    "svelte": "^3.24.0"
+    "svelte": "^3.24.0",
+    "webtorrent": "^0.113.0"
   },
   "devDependencies": {
     "@electron-forge/cli": "6.0.0-beta.53",

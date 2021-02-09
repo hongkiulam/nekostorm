@@ -19,7 +19,11 @@ const nekoFetchElectron = async (
   return new Promise((res, rej) => {
     const api = (window as any).api;
     api.receive("fromNekoApi", (data: APITorrent[]) => {
-      res(data);
+      if (data) {
+        res(data);
+      } else {
+        rej();
+      }
     });
     api.send("toNekoApi", queryObj);
   });

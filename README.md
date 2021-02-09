@@ -14,4 +14,18 @@ _Built with Svelte, Typescript, Scss, Snowpack, WebTorrent, Electron_
 
 ---
 
+#### Development
+
+Run `npm start` for a basic Snowpack development server. Hosted on port `8080`
+
+Run `npm run dev` for a Netlify-Snowpack development server which also builds the netlify serverless functions locally. Hosted on port `3000`
+
+Run `npm run electron` for an Electron-Snowpack development build
+
+#### Build
+
+To build for the web simply run `npm run build`, however this is assuming the build is hosted on Netlify, otherwise the anime search feature will not work
+
+---
+
 _Used [nyaaclient](https://github.com/hongkiulam/nyaaclient) as a starting point._

@@ -1,5 +1,7 @@
 const { app, BrowserWindow } = require("electron");
 const path = require("path");
+const main = require("./main");
+const webtorrent = require("./webtorrent");
 
 // TODO: Create typescript file instead.
 
@@ -11,26 +13,28 @@ if (require("electron-squirrel-startup")) {
 
 const createWindow = () => {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    webPreferences: {
-      contextIsolation: true,
-      preload: path.join(__dirname, "preload.js"), // use a preload script
-    },
-  });
+  main.init();
+  webtorrent.init();
+  // const mainWindow = new BrowserWindow({
+  //   width: 800,
+  //   height: 600,
+  //   webPreferences: {
+  //     contextIsolation: true,
+  //     preload: path.join(__dirname, "preload.js"), // use a preload script
+  //   },
+  // });
 
-  const args = process.argv.slice(2);
-  if (args.includes("dev") || process.env.DEV) {
-    // and load the snowpack dev url
-    mainWindow.loadURL("http://localhost:8080");
-  } else {
-    // and load the index.html of the app.
-    mainWindow.loadFile(path.join(__dirname, "../build/index.html"));
-  }
+  // const args = process.argv.slice(2);
+  // if (args.includes("dev") || process.env.DEV) {
+  //   // and load the snowpack dev url
+  //   mainWindow.loadURL("http://localhost:8080");
+  // } else {
+  //   // and load the index.html of the app.
+  //   mainWindow.loadFile(path.join(__dirname, "../build/index.html"));
+  // }
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // // Open the DevTools.
+  // mainWindow.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished
@@ -58,14 +62,14 @@ app.on("activate", () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 const { ipcMain } = require("electron");
-const api = require("../../server/_api");
+const api = require("../../../server/_api");
 
 ipcMain.on("toNekoApi", (event, args) => {
   api(args)
     .then((data) => {
-      event.reply("fromNekoApi", data);
+      main.send("fromNekoApi", data);
     })
     .catch(() => {
-      event.reply("fromNekoApi");
+      main.send("fromNekoApi");
     });
 });
