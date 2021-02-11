@@ -18,14 +18,14 @@ const nekoFetchElectron = async (
   const queryObj = qs.parse(queryString);
   return new Promise((res, rej) => {
     const api = (window as any).api;
-    api.receive("fromNekoApi", (data: APITorrent[]) => {
+    api.receive("main>client:neko", (data: APITorrent[]) => {
       if (data) {
         res(data);
       } else {
         rej();
       }
     });
-    api.send("toNekoApi", queryObj);
+    api.send("client>main:neko", queryObj);
   });
 };
 export const nekoFetch = isElectron() ? nekoFetchElectron : nekoFetchNetlify;

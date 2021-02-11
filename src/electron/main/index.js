@@ -1,6 +1,6 @@
 const { app, BrowserWindow } = require("electron");
 const path = require("path");
-const main = require("./main");
+const client = require("./client");
 const webtorrent = require("./webtorrent");
 
 // TODO: Create typescript file instead.
@@ -13,7 +13,7 @@ if (require("electron-squirrel-startup")) {
 
 const createWindow = () => {
   // Create the browser window.
-  main.init();
+  client.init();
   webtorrent.init();
   // const mainWindow = new BrowserWindow({
   //   width: 800,
@@ -64,12 +64,30 @@ app.on("activate", () => {
 const { ipcMain } = require("electron");
 const api = require("../../../server/_api");
 
-ipcMain.on("toNekoApi", (event, args) => {
+ipcMain.on("client>main:neko", (event, args) => {
   api(args)
     .then((data) => {
-      main.send("fromNekoApi", data);
+      client.send("main>client:neko", data);
     })
     .catch(() => {
-      main.send("fromNekoApi");
+      client.send("main>client:neko");
     });
+});
+
+/**
+ * Events to pass from client to wt and vice versa
+ */
+const clientToWebTorrentEvents = ["wt-add"];
+const webTorrentToClientEvents = [];
+
+clientToWebTorrentEvents.forEach((e) => {
+  ipcMain.on("client>main:" + e, (event, ...args) => {
+    webtorrent.send("main>webtorrent:" + e, ...args);
+  });
+});
+
+webTorrentToClientEvents.forEach((e) => {
+  ipcMain.on("webtorrent>main:" + e, (event, ...args) => {
+    client.send("main>client:" + e, ...args);
+  });
 });

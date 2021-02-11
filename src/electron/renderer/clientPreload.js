@@ -8,13 +8,13 @@ const wtClient = new WT();
 contextBridge.exposeInMainWorld("api", {
   send: (channel, data) => {
     // whitelist channels
-    let validChannels = ["toNekoApi", "toWebTorrent:add"];
+    let validChannels = ["client>main:neko"];
     if (validChannels.includes(channel)) {
       ipcRenderer.send(channel, data);
     }
   },
   receive: (channel, func) => {
-    let validChannels = ["fromNekoApi", "fromWebTorrent:add"];
+    let validChannels = ["main>client:neko"];
     if (validChannels.includes(channel)) {
       ipcRenderer.on(channel, (event, ...args) => func(...args));
     }
@@ -22,26 +22,9 @@ contextBridge.exposeInMainWorld("api", {
 });
 
 contextBridge.exposeInMainWorld("wt", {
-  add: (magnet, callbacks) => {
-    wtClient.add(magnet, (webtorrent) => {
-      if (callbacks.download) {
-        setInterval(() => {
-          callbacks.download(webtorrent);
-        }, 500);
-        // webtorrent.on("download", () => {
-        // });
-      }
-      if (callbacks.done) {
-        webtorrent.on("done", () => {
-          callbacks.done();
-        });
-      }
-      if (callbacks.metadata) {
-        webtorrent.on("metadata", () => {
-          callbacks.metadata(webtorrent);
-        });
-      }
-    });
+  add: (magnet) => {
+    console.log(magnet);
+    ipcRenderer.send("client>main:wt-add", magnet);
   },
   remove: () => {},
   onMetaData: () => {},

@@ -7,13 +7,7 @@ export type WindowWithContextBridge = Window &
       receive: () => void;
     };
     wt: {
-      add: (magnet: string, callbacks: WebTorrentCallbacks) => void;
+      add: (magnet: string) => void;
       remove: () => void;
     };
   };
-
-interface WebTorrentCallbacks {
-  download?: (webtorrent: WebTorrent.Torrent) => void;
-  done?: () => void;
-  metadata?: (webtorrent: WebTorrent.Torrent) => void;
-}

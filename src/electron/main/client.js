@@ -9,7 +9,7 @@ const init = () => {
     height: 600,
     webPreferences: {
       contextIsolation: true,
-      preload: path.join(__dirname, "../renderer/mainPreload.js"), // use a preload script
+      preload: path.join(__dirname, "../renderer/clientPreload.js"), // use a preload script
     },
   });
 
