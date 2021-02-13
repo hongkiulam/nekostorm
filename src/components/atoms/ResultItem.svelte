@@ -2,18 +2,24 @@
   import { formatFileSize } from "../../helpers/format";
   import type { APITorrent } from "../../types/api";
   import { DownloadCloudIcon, CheckIcon } from "svelte-feather-icons/src";
+  import { torrents } from "../../store/torrents";
   import { size } from "../../helpers/constants";
 
   export let item: APITorrent;
 
-  let isDownloaded = false;
+  let isDownloaded = torrents.exists(item.id);
 
   const cp = { cellpadding: "0", cellspacing: "0" }; //commonprops
   const formatDate = (isoDate: string) => {
     return isoDate.slice(0, 10);
   };
   const download = () => {
-    isDownloaded = true;
+    // we are in the browser, just link them the magnet
+    const a = document.createElement("a");
+    a.setAttribute("href", item.magnet);
+    a.setAttribute("target", "_blank");
+    a.setAttribute("rel", "noopener noreferrer");
+    a.click();
   };
 </script>
 

@@ -1,11 +1,12 @@
 import { get, writable } from "svelte/store";
 import { /*electronStore,*/ wtClient } from "./basic";
-import type { Torrent, NyaaTorrent } from "../types/torrent";
+import type { Torrent } from "../types/torrent";
+import type { APITorrent } from "../types/api";
 
 const useTorrents = () => {
   const torrents = writable<Torrent>({});
   // electronStore.get("torrents") as Torrent[]
-  const add = (torrent: NyaaTorrent) => {
+  const add = (torrent: APITorrent) => {
     torrents.update((old) => ({
       ...old,
       [torrent.id]: { searchResult: torrent, loading: true, added: Date.now() },
@@ -21,7 +22,7 @@ const useTorrents = () => {
     //   }));
     // });
   };
-  const remove = (torrent: NyaaTorrent) => {
+  const remove = (torrent: APITorrent) => {
     torrents.update((old) => ({
       ...old,
       [torrent.id]: {
@@ -34,8 +35,8 @@ const useTorrents = () => {
     //   torrents.set(rest);
     // });
   };
-  const exists = (magnetURI: string) => {
-    const found = wtClient.get(magnetURI);
+  const exists = (id: number) => {
+    const found = wtClient.get(id);
     return found;
   };
   // initialise with torrents from electron store
