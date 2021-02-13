@@ -4,6 +4,7 @@
   export let color: Colors = "primary";
   export let inverted: boolean = false;
   export let dense: boolean = false;
+  export let disabled = false;
 </script>
 
 <style lang="scss">
@@ -33,6 +34,9 @@
   .dense {
     padding: 0;
   }
+  .disabled {
+    pointer-events: none;
+  }
 </style>
 
 <button
@@ -40,6 +44,8 @@
   style="--button-color: var(--{color})"
   class:inverted
   class:dense
+  class:disabled
+  {disabled}
 >
   <slot />
 </button>

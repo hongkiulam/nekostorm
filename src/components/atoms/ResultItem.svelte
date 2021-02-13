@@ -4,22 +4,30 @@
   import { DownloadCloudIcon, CheckIcon } from "svelte-feather-icons/src";
   import { torrents } from "../../store/torrents";
   import { size } from "../../helpers/constants";
+  import { isElectron } from "../../helpers/isElectron";
 
   export let item: APITorrent;
 
-  let isDownloaded = torrents.exists(item.id);
+  $: isDownloaded = torrents.exists(item.id);
 
   const cp = { cellpadding: "0", cellspacing: "0" }; //commonprops
   const formatDate = (isoDate: string) => {
     return isoDate.slice(0, 10);
   };
   const download = () => {
-    // we are in the browser, just link them the magnet
-    const a = document.createElement("a");
-    a.setAttribute("href", item.magnet);
-    a.setAttribute("target", "_blank");
-    a.setAttribute("rel", "noopener noreferrer");
-    a.click();
+    if (isElectron()) {
+      if (!isDownloaded) {
+        torrents.add(item);
+        isDownloaded = true;
+      }
+    } else {
+      // we are in the browser, just link them the magnet
+      const a = document.createElement("a");
+      a.setAttribute("href", item.magnet);
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener noreferrer");
+      a.click();
+    }
   };
 </script>
 

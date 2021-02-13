@@ -1,9 +1,18 @@
 <script lang="ts">
-  import { flip } from "svelte/animate";
-  import { fade } from "svelte/transition";
+  import Masonry from "svelte-masonry/Masonry.svelte";
+  import TorrentCard from "../molecules/TorrentCard.svelte";
+  import MainLayout from "../atoms/MainLayout.svelte";
   import type { TorrentInstance } from "../../types/torrent";
   import { torrents } from "../../store/torrents";
+  import { size } from "../../helpers/constants";
+  import { isElectron } from "../../helpers/isElectron";
 
+  let refreshLayout: () => Promise<void>;
+
+  $: {
+    refreshLayout?.();
+    $torrents; // refresh layout when torrents changes
+  }
   $: {
     console.log($torrents);
   }
@@ -13,8 +22,19 @@
   ) as TorrentInstance[];
 </script>
 
-<div>
-  {#each _torrents as torrent (torrent.searchResult.id)}
-    <div animate:flip={{ duration: 300 }} out:fade />
-  {/each}
-</div>
+<MainLayout>
+  <h2 slot="header">Torrents</h2>
+  {#if isElectron()}
+    {#if _torrents.length > 0}
+      <Masonry bind:refreshLayout gridGap={size.u + "px"}>
+        {#each _torrents as torrent (torrent.searchResult.id)}
+          <TorrentCard {torrent} />
+        {/each}
+      </Masonry>
+    {:else}
+      <p>Here you will find the anime that you are currently downloading!</p>
+    {/if}
+  {:else}
+    <p>Please install our desktop app to download torrents with NekoStorm</p>
+  {/if}
+</MainLayout>

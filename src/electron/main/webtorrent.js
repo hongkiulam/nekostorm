@@ -2,6 +2,8 @@ const { app, BrowserWindow } = require("electron");
 const path = require("path");
 
 let win = null;
+const args = process.argv.slice(2);
+const isDev = args.includes("dev") || process.env.DEV;
 const init = () => {
   // Create the browser window.
   win = new BrowserWindow({
@@ -13,7 +15,7 @@ const init = () => {
     maximizable: false,
     minimizable: false,
     resizable: true,
-    show: true,
+    show: isDev,
     skipTaskbar: true,
     title: "webtorrent-hidden-window",
     useContentSize: true,
@@ -24,8 +26,7 @@ const init = () => {
     },
   });
 
-  const args = process.argv.slice(2);
-  if (args.includes("dev") || process.env.DEV) {
+  if (isDev) {
     // and load the snowpack dev url
     win.loadFile(path.join(__dirname, "../../../public/webtorrent.html"));
   } else {

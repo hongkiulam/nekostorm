@@ -2,6 +2,7 @@ const { app, BrowserWindow } = require("electron");
 const path = require("path");
 const client = require("./client");
 const webtorrent = require("./webtorrent");
+const rimraf = require("rimraf");
 
 // TODO: Create typescript file instead.
 
@@ -77,8 +78,8 @@ ipcMain.on("client>main:neko", (event, args) => {
 /**
  * Events to pass from client to wt and vice versa
  */
-const clientToWebTorrentEvents = ["wt-add"];
-const webTorrentToClientEvents = [];
+const clientToWebTorrentEvents = ["wt-add", "wt-remove"];
+const webTorrentToClientEvents = ["wt-metadata", "wt-progress"];
 
 clientToWebTorrentEvents.forEach((e) => {
   ipcMain.on("client>main:" + e, (event, ...args) => {
@@ -89,5 +90,14 @@ clientToWebTorrentEvents.forEach((e) => {
 webTorrentToClientEvents.forEach((e) => {
   ipcMain.on("webtorrent>main:" + e, (event, ...args) => {
     client.send("main>client:" + e, ...args);
+  });
+});
+
+ipcMain.on("webtorrent>main:remove-file", (event, path) => {
+  rimraf(path, (err) => {
+    if (err) {
+      event.reply("rimraf-error", err);
+    }
+    event.reply("rimraf-done", "done");
   });
 });

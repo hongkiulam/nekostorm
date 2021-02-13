@@ -22,10 +22,34 @@ contextBridge.exposeInMainWorld("api", {
 });
 
 contextBridge.exposeInMainWorld("wt", {
-  add: (magnet) => {
-    console.log(magnet);
-    ipcRenderer.send("client>main:wt-add", magnet);
+  add: (magnet, id) => {
+    console.log("[webtorrent] add torrent", magnet);
+    ipcRenderer.send("client>main:wt-add", magnet, id);
   },
-  remove: () => {},
-  onMetaData: () => {},
+  metadata: (id, cb) => {
+    const metaDataListener = (event, torrentKey) => {
+      if (id === torrentKey) {
+        console.log("[webtorrent] received metadata");
+        ipcRenderer.removeListener("main>client:wt-metadata", metaDataListener);
+        return cb();
+      }
+    };
+    ipcRenderer.on("main>client:wt-metadata", metaDataListener);
+  },
+  remove: (id) => {
+    console.log("[webtorrent] remove torrent");
+    ipcRenderer.send("client>main:wt-remove", id);
+  },
+  progress: (listener) => {
+    progressListeners.push(listener);
+    return progressListeners.filter((l) => l !== listener);
+  },
+});
+
+const progressListeners = [];
+
+ipcRenderer.on("main>client:wt-progress", (event, torrentIdMap) => {
+  progressListeners.forEach((listener) => {
+    listener(torrentIdMap);
+  });
 });

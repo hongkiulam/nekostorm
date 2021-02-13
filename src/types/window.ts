@@ -1,4 +1,4 @@
-import type WebTorrent from "webtorrent";
+import type { WebTorrentIdMap } from "./torrent";
 
 export type WindowWithContextBridge = Window &
   typeof globalThis & {
@@ -7,7 +7,9 @@ export type WindowWithContextBridge = Window &
       receive: () => void;
     };
     wt: {
-      add: (magnet: string) => void;
-      remove: () => void;
+      add: (magnet: string, id: number) => void;
+      metadata: (id: number, received: () => void) => void;
+      remove: (id: number) => void;
+      progress: (listener: (torrentIdMap: WebTorrentIdMap) => void) => Function;
     };
   };
