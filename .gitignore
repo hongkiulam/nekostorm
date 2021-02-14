@@ -7,3 +7,5 @@ inkscape
 .netlify
 # electron out
 out
+# electron-packager
+release-builds
