@@ -31,7 +31,7 @@ const init = () => {
     win.loadFile(path.join(__dirname, "../../../public/webtorrent.html"));
   } else {
     // and load the index.html of the app.
-    win.loadFile(path.join(__dirname, "../../build/webtorrent.html"));
+    win.loadFile(path.join(__dirname, "../../../build/webtorrent.html"));
   }
   // Open the DevTools.
   win.webContents.openDevTools();

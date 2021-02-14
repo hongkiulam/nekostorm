@@ -5,3 +5,5 @@ node_modules
 inkscape
 # Local Netlify folder
 .netlify
+# electron out
+out

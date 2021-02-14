@@ -19,11 +19,15 @@ const init = () => {
     win.loadURL("http://localhost:8080");
   } else {
     // and load the index.html of the app.
-    win.loadFile(path.join(__dirname, "../../build/index.html"));
+    win.loadFile(path.join(__dirname, "../../../build/index.html"));
   }
 
   // Open the DevTools.
   win.webContents.openDevTools();
+
+  win.on("close", () => {
+    app.quit();
+  });
 };
 
 function send(...args) {

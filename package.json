@@ -16,6 +16,7 @@
     "electron:start": "electron-forge start",
     "electron:run": "npm run electron:start -- -- dev",
     "electron:serve": "npm start",
+    "electron:make": "npm run build && node scripts/postbuild.js && electron-forge make",
     "electron": "concurrently 'npm run electron:run' 'npm run electron:serve'"
   },
   "config": {
@@ -36,10 +37,6 @@
         },
         {
           "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
           "config": {}
         }
       ]
