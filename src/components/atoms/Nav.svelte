@@ -7,11 +7,13 @@
     SettingsIcon,
   } from "svelte-feather-icons/src";
   import active from "svelte-spa-router/active";
-  import { location, querystring } from "svelte-spa-router";
+  import { location, querystring, push } from "svelte-spa-router";
   import { size } from "../../helpers/constants";
 
   const searchRegexp = /(\/\?.*)|(\/)$/g;
   $: path = $location + "?" + $querystring;
+
+  const navigate = (path: string) => () => push(path);
 </script>
 
 <style lang="scss">
@@ -23,7 +25,7 @@
     background: var(--primary);
     color: var(--white);
   }
-  a,
+
   button {
     width: var(--u4);
     height: var(--u4);
@@ -31,9 +33,11 @@
     align-items: center;
     justify-content: center;
     background: var(--primary);
+    cursor: pointer;
   }
   .disabled {
     opacity: 0.5;
+    cursor: auto;
   }
   :global(a.active, button.active) {
     background: var(--copy-bg);
@@ -44,14 +48,16 @@
 
 <nav>
   <div class="top">
-    <a href="#/" class={path.match(searchRegexp) ? "active" : ""}
-      ><SearchIcon size={size.u2} /></a
+    <button
+      on:click={navigate("/")}
+      class={path.match(searchRegexp) ? "active" : ""}
+      ><SearchIcon size={size.u2} /></button
     >
-    <a href="#/starred" use:active={{ path: "/starred" }}
-      ><StarIcon size={size.u2} /></a
+    <button on:click={navigate("/starred")} use:active={{ path: "/starred" }}
+      ><StarIcon size={size.u2} /></button
     >
-    <a href="#/torrents" use:active={{ path: "/torrents" }}
-      ><DownloadCloudIcon size={size.u2} /></a
+    <button on:click={navigate("/torrents")} use:active={{ path: "/torrents" }}
+      ><DownloadCloudIcon size={size.u2} /></button
     >
     <button class="disabled" use:active={{ path: "/torrents/*" }}
       ><DropletIcon size={size.u2} /></button
@@ -59,8 +65,8 @@
   </div>
 
   <div class="bottom">
-    <a href="#/settings" use:active={{ path: "/settings" }}
-      ><SettingsIcon size={size.u2} /></a
+    <button on:click={navigate("/settings")} use:active={{ path: "/settings" }}
+      ><SettingsIcon size={size.u2} /></button
     >
   </div>
 </nav>
