@@ -18,33 +18,11 @@
     "electron:start": "electron-forge start",
     "electron:run": "npm run electron:start -- -- dev",
     "electron:serve": "npm start",
-    "electron:make": "npm run build && electron-forge make",
-    "electron:package": "electron-packager . --out=release-builds --overwrite",
-    "electron:package-win": "npm run electron:package -- --asar=true --platform=win32 --arch=ia32",
+    "electron:make-linux": "npm run build && electron-forge make --platform linux",
+    "electron:make-win": "npm run build && electron-forge make --platform win32",
+    "electron:package-linux": "npm run build && electron-forge package --platform linux",
+    "electron:package-win": "npm run build && electron-forge package --platform win32",
     "electron": "concurrently 'npm run electron:run' 'npm run electron:serve'"
-  },
-  "config": {
-    "forge": {
-      "packagerConfig": {},
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "minimal_setup"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        }
-      ]
-    }
   },
   "dependencies": {
     "axios": "^0.21.1",
@@ -75,7 +53,6 @@
     "chai": "^4.2.0",
     "concurrently": "^5.3.0",
     "electron": "^11.2.3",
-    "electron-packager": "^15.2.0",
     "netlify-cli": "^3.4.7",
     "query-string": "^6.13.8",
     "rollup-plugin-svelte": "^7.0.0",

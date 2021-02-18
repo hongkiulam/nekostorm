@@ -2,6 +2,8 @@ const { app, BrowserWindow } = require("electron");
 const path = require("path");
 
 let win = null;
+const args = process.argv.slice(2);
+const isDev = args.includes("dev") || process.env.DEV;
 const init = () => {
   // Create the browser window.
   win = new BrowserWindow({
@@ -13,8 +15,7 @@ const init = () => {
     },
   });
 
-  const args = process.argv.slice(2);
-  if (args.includes("dev") || process.env.DEV) {
+  if (isDev) {
     // and load the snowpack dev url
     win.loadURL("http://localhost:8080");
   } else {
@@ -23,7 +24,9 @@ const init = () => {
   }
 
   // Open the DevTools.
-  win.webContents.openDevTools();
+  if (isDev) {
+    win.webContents.openDevTools();
+  }
 
   win.on("close", () => {
     app.quit();

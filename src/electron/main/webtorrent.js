@@ -34,7 +34,9 @@ const init = () => {
     win.loadFile(path.join(__dirname, "../../../build/webtorrent.html"));
   }
   // Open the DevTools.
-  win.webContents.openDevTools();
+  if (isDev) {
+    win.webContents.openDevTools();
+  }
 };
 
 function send(...args) {
