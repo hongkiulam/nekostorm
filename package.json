@@ -7,7 +7,7 @@
     "name": "Haydon Lam",
     "email": "lamhaydon@gmail.com"
   },
-  "main": "src/electron/main",
+  "main": "src/electron/main/index.js",
   "productName": "nekostorm",
   "scripts": {
     "start": "snowpack dev",
@@ -18,11 +18,10 @@
     "electron:start": "electron-forge start",
     "electron:run": "npm run electron:start -- -- dev",
     "electron:serve": "npm start",
-    "electron:make-linux": "npm run build && electron-forge make --platform linux",
-    "electron:make-win": "npm run build && electron-forge make --platform win32",
-    "electron:package-linux": "npm run build && electron-forge package --platform linux",
-    "electron:package-win": "npm run build && electron-forge package --platform win32",
-    "electron": "concurrently 'npm run electron:run' 'npm run electron:serve'"
+    "electron": "concurrently 'npm run electron:run' 'npm run electron:serve'",
+    "eb:w": "npm run build && electron-builder --win",
+    "eb:l": "npm run build && electron-builder --linux",
+    "eb:wl": "npm run build && electron-builder -wl"
   },
   "dependencies": {
     "axios": "^0.21.1",
@@ -53,6 +52,7 @@
     "chai": "^4.2.0",
     "concurrently": "^5.3.0",
     "electron": "^11.2.3",
+    "electron-builder": "^22.9.1",
     "netlify-cli": "^3.4.7",
     "query-string": "^6.13.8",
     "rollup-plugin-svelte": "^7.0.0",

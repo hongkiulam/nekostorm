@@ -9,3 +9,5 @@ inkscape
 out
 # electron-packager
 release-builds
+# electron-builder
+out-*

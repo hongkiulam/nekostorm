@@ -1,0 +1,20 @@
+appId: "com.nekostorm"
+productName: "nekostorm"
+
+# electron-builder ignores build folder, specify to include
+# alongside other folders to include
+files:
+  - "build/"
+  - "src/"
+  - "node_modules/"
+  - "public/"
+  - "server/"
+
+directories:
+  output: "out-eb"
+
+win:
+  target: "zip"
+
+linux:
+  target: "zip"

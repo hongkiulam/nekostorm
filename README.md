@@ -26,6 +26,18 @@ Run `npm run electron` for an Electron-Snowpack development build
 
 To build for the web simply run `npm run build`, however this is assuming the build is hosted on Netlify, otherwise the anime search feature will not work
 
+#### Package
+
+`electron-builder` is used to package for multiple-platforms, for convenience I've used their provided Docker images which will allow us to build for Windows and Linux.
+
+`docker-compose up -d`
+
+`docker run containername`
+
+This will build the packaged apps within the container, to access the files we can use `docker cp`
+
+`docker cp containerid:/app/out-eb ./`
+
 ---
 
 _Used [nyaaclient](https://github.com/hongkiulam/nyaaclient) as a starting point._
