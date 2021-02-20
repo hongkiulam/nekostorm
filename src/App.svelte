@@ -1,6 +1,7 @@
 <script lang="ts">
   import Router from "svelte-spa-router";
   import Nav from "./components/atoms/Nav.svelte";
+  import ToastProvider from "./components/atoms/ToastProvider.svelte";
   import Search from "./components/pages/Search.svelte";
   import Settings from "./components/pages/Settings.svelte";
   import Starred from "./components/pages/Starred.svelte";
@@ -27,4 +28,5 @@
 <div class="app">
   <Nav />
   <Router {routes} />
+  <ToastProvider />
 </div>

@@ -3,6 +3,7 @@ import type { Torrent } from "../types/torrent";
 import type { APITorrent } from "../types/api";
 import { isElectron } from "../helpers/isElectron";
 import type { WindowWithContextBridge } from "src/types/window";
+import { toasts } from "./toasts";
 
 const torrentStorageKey = "nekostorm-torrents";
 
@@ -28,6 +29,10 @@ const useTorrents = () => {
           },
         }));
       });
+      toasts.add({
+        label: `Torrent queued ${torrent.name}`,
+        kind: "success",
+      });
     }
   };
   const remove = (torrent: APITorrent) => {
@@ -35,6 +40,10 @@ const useTorrents = () => {
     torrents.update(() => rest);
     if (isElectron()) {
       (window as WindowWithContextBridge).wt.remove(torrent.id);
+      toasts.add({
+        label: `Torrent removed ${torrent.name}`,
+        kind: "danger",
+      });
     }
   };
 

@@ -1,6 +1,7 @@
 import { get, writable } from "svelte/store";
 import { objToQueryString } from "../helpers/query";
 import type { SavedSearch } from "../types/savedSearch";
+import { toasts } from "./toasts";
 
 const savedSearchStorageKey = "nekostorm-savedSearches";
 const useSavedSearch = () => {
@@ -10,6 +11,10 @@ const useSavedSearch = () => {
   );
   const add = (search: SavedSearch) => {
     savedSearches.update((oldSS) => [...oldSS, search]);
+    toasts.add({
+      label: "Saved Search: " + search.q,
+      kind: "success",
+    });
   };
   const remove = (search: SavedSearch) => {
     const removed = get(savedSearches).filter((sS) => {
@@ -18,6 +23,10 @@ const useSavedSearch = () => {
       return stringToRemove !== stringInStore;
     });
     savedSearches.set(removed);
+    toasts.add({
+      label: "Removed Saved Search: " + search.q,
+      kind: "danger",
+    });
   };
   const exists = (search: SavedSearch | null) => {
     const found = get(savedSearches).some((sS) => {
