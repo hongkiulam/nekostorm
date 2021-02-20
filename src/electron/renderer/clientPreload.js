@@ -44,6 +44,18 @@ contextBridge.exposeInMainWorld("wt", {
     progressListeners.push(listener);
     return progressListeners.filter((l) => l !== listener);
   },
+  save: (id, cb) => {
+    ipcRenderer.send("client>main:wt-presave", id);
+    const finishedSaveListener = (event, torrentKey, success) => {
+      if (torrentKey === id) {
+        if (success) {
+          cb();
+        }
+        ipcRenderer.removeListener("main>client:wt-save", finishedSaveListener);
+      }
+    };
+    ipcRenderer.on("main>client:wt-save", finishedSaveListener);
+  },
 });
 
 const progressListeners = [];

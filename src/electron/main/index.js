@@ -1,8 +1,11 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, dialog } = require("electron");
 const path = require("path");
 const client = require("./client");
 const webtorrent = require("./webtorrent");
 const rimraf = require("rimraf");
+const os = require("os");
+const fs = require("fs");
+const fse = require("fs-extra");
 
 // TODO: Create typescript file instead.
 
@@ -52,6 +55,10 @@ app.on("window-all-closed", () => {
   }
 });
 
+app.on("will-quit", (e) => {
+  rimraf.sync(path.join(os.tmpdir(), "nekostorm"));
+});
+
 app.on("activate", () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
@@ -78,7 +85,7 @@ ipcMain.on("client>main:neko", (event, args) => {
 /**
  * Events to pass from client to wt and vice versa
  */
-const clientToWebTorrentEvents = ["wt-add", "wt-remove"];
+const clientToWebTorrentEvents = ["wt-add", "wt-remove", "wt-presave"];
 const webTorrentToClientEvents = ["wt-metadata", "wt-progress"];
 
 clientToWebTorrentEvents.forEach((e) => {
@@ -93,6 +100,9 @@ webTorrentToClientEvents.forEach((e) => {
   });
 });
 
+/**
+ * Additional Events
+ */
 ipcMain.on("webtorrent>main:remove-file", (event, path) => {
   rimraf(path, (err) => {
     if (err) {
@@ -100,4 +110,39 @@ ipcMain.on("webtorrent>main:remove-file", (event, path) => {
     }
     event.reply("rimraf-done", "done");
   });
+});
+
+ipcMain.on("webtorrent>main:wt-save", (event, tmpPath, name, torrentKey) => {
+  const saveFlow = (defaultPath) => {
+    const newPath = dialog.showSaveDialogSync({
+      title: "Save Torrent",
+      defaultPath,
+    });
+
+    if (newPath) {
+      if (fs.existsSync(newPath)) {
+        const fileExistsResponse = dialog.showMessageBoxSync({
+          message:
+            "File already exists, do you want to replace the existing file?",
+          buttons: ["No", "Yes"],
+        });
+        if (fileExistsResponse === 0) {
+          return saveFlow(newPath);
+        } else {
+          // they want to replace
+          rimraf.sync(newPath);
+        }
+      }
+      // move torrent from tmp to their desired location
+      fse.move(path.join(tmpPath, name), newPath).then((err) => {
+        if (err) {
+          console.error(err);
+          dialog.showMessageBoxSync({ message: "Failed to save file" });
+          client.send("main>client:wt-save", torrentKey, false);
+        }
+        client.send("main>client:wt-save", torrentKey, true);
+      });
+    }
+  };
+  saveFlow(name);
 });

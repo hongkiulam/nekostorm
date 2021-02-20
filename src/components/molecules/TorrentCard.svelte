@@ -81,12 +81,17 @@
     <div />
     <Button
       color="success"
-      disabled={!webtorrent.done}
+      disabled={!webtorrent.done || torrent.saved}
       on:click={(e) => {
         e.stopPropagation();
         // save
-        alert("Doesnt do anything yet");
-      }}>Save</Button
+        torrents.save(torrent.searchResult.id);
+      }}
+      >{#if torrent.saved}
+        Saved
+      {:else}
+        Save
+      {/if}</Button
     >
   {/if}
 </Card>

@@ -11,5 +11,6 @@ export type WindowWithContextBridge = Window &
       metadata: (id: number, received: () => void) => void;
       remove: (id: number) => void;
       progress: (listener: (torrentIdMap: WebTorrentIdMap) => void) => Function;
+      save: (id: number, saved: () => void) => void;
     };
   };

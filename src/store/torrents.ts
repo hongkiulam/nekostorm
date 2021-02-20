@@ -16,7 +16,12 @@ const useTorrents = () => {
   const add = (torrent: APITorrent) => {
     torrents.update((old) => ({
       ...old,
-      [torrent.id]: { searchResult: torrent, loading: true, added: Date.now() },
+      [torrent.id]: {
+        searchResult: torrent,
+        loading: true,
+        added: Date.now(),
+        saved: false,
+      },
     }));
     if (isElectron()) {
       (window as WindowWithContextBridge).wt.add(torrent.magnet, torrent.id);
@@ -52,10 +57,22 @@ const useTorrents = () => {
     return found;
   };
 
+  const save = (id: number) => {
+    (window as WindowWithContextBridge).wt.save(id, () => {
+      torrents.update((old) => ({
+        ...old,
+        [id]: {
+          ...old[id],
+          saved: true,
+        },
+      }));
+    });
+  };
+
   torrents.subscribe((t) => {
     // only save searchResult obj containing id and magnet etc...
     const savedTorrents = Object.values(t).map((x) => x.searchResult);
-    localStorage.setItem(torrentStorageKey, JSON.stringify(savedTorrents));
+    // localStorage.setItem(torrentStorageKey, JSON.stringify(savedTorrents));
     console.log("TorrentsUpdated", savedTorrents);
   });
 
@@ -68,6 +85,7 @@ const useTorrents = () => {
     add,
     remove,
     exists,
+    save,
   };
 };
 
