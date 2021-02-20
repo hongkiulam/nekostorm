@@ -15,7 +15,7 @@ const findTorrentFromId = (torrentKey) =>
 /**
  * Add
  */
-ipcRenderer.on("main>webtorrent:wt-add", (event, magnet, id) => {
+ipcRenderer.on("client>webtorrent:wt-add", (event, magnet, id) => {
   console.log("[wt-add]", magnet, id);
   const torrent = wtClient.add(
     magnet,
@@ -23,7 +23,7 @@ ipcRenderer.on("main>webtorrent:wt-add", (event, magnet, id) => {
     (torrent) => {
       // just need to notify of when metadata loaded, the rest will be handled with
       // setInterval below
-      ipcRenderer.send("webtorrent>main:wt-metadata", id);
+      ipcRenderer.send("webtorrent>client:wt-metadata", id);
     }
   );
   torrent.key = id;
@@ -61,13 +61,13 @@ setInterval(() => {
       };
     }
   });
-  ipcRenderer.send("webtorrent>main:wt-progress", torrentIdMap);
+  ipcRenderer.send("webtorrent>client:wt-progress", torrentIdMap);
 }, 1000);
 
 /**
  * Remove
  */
-ipcRenderer.on("main>webtorrent:wt-remove", (event, torrentKey) => {
+ipcRenderer.on("client>webtorrent:wt-remove", (event, torrentKey) => {
   const foundTorrent = findTorrentFromId(torrentKey);
   console.log("[wt-remove]", torrentKey, foundTorrent);
 
@@ -78,7 +78,7 @@ ipcRenderer.on("main>webtorrent:wt-remove", (event, torrentKey) => {
 /**
  * Save
  */
-ipcRenderer.on("main>webtorrent:wt-presave", (event, torrentKey) => {
+ipcRenderer.on("client>webtorrent:wt-presave", (event, torrentKey) => {
   const foundTorrent = findTorrentFromId(torrentKey);
   console.log("[wt-save] ", foundTorrent.path, foundTorrent.name);
   ipcRenderer.send(

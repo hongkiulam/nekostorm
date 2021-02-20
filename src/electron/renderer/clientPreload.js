@@ -24,31 +24,35 @@ contextBridge.exposeInMainWorld("api", {
 contextBridge.exposeInMainWorld("wt", {
   add: (magnet, id) => {
     console.log("[webtorrent] add torrent", magnet);
-    ipcRenderer.send("client>main:wt-add", magnet, id);
+    ipcRenderer.send("client>webtorrent:wt-add", magnet, id);
   },
   metadata: (id, cb) => {
     const metaDataListener = (event, torrentKey) => {
       if (id === torrentKey) {
         console.log("[webtorrent] received metadata");
-        ipcRenderer.removeListener("main>client:wt-metadata", metaDataListener);
+        ipcRenderer.removeListener(
+          "webtorrent>client:wt-metadata",
+          metaDataListener
+        );
         return cb();
       }
     };
-    ipcRenderer.on("main>client:wt-metadata", metaDataListener);
+    ipcRenderer.on("webtorrent>client:wt-metadata", metaDataListener);
   },
   remove: (id) => {
     console.log("[webtorrent] remove torrent");
-    ipcRenderer.send("client>main:wt-remove", id);
+    ipcRenderer.send("client>webtorrent:wt-remove", id);
   },
   progress: (listener) => {
     progressListeners.push(listener);
     return progressListeners.filter((l) => l !== listener);
   },
   save: (id, cb) => {
-    ipcRenderer.send("client>main:wt-presave", id);
+    ipcRenderer.send("client>webtorrent:wt-presave", id);
     const finishedSaveListener = (event, torrentKey, success) => {
       if (torrentKey === id) {
         if (success) {
+          console.log("[wt-save] Successfully saved torrent");
           cb();
         }
         ipcRenderer.removeListener("main>client:wt-save", finishedSaveListener);
@@ -60,7 +64,7 @@ contextBridge.exposeInMainWorld("wt", {
 
 const progressListeners = [];
 
-ipcRenderer.on("main>client:wt-progress", (event, torrentIdMap) => {
+ipcRenderer.on("webtorrent>client:wt-progress", (event, torrentIdMap) => {
   progressListeners.forEach((listener) => {
     listener(torrentIdMap);
   });

@@ -89,14 +89,14 @@ const clientToWebTorrentEvents = ["wt-add", "wt-remove", "wt-presave"];
 const webTorrentToClientEvents = ["wt-metadata", "wt-progress"];
 
 clientToWebTorrentEvents.forEach((e) => {
-  ipcMain.on("client>main:" + e, (event, ...args) => {
-    webtorrent.send("main>webtorrent:" + e, ...args);
+  ipcMain.on("client>webtorrent:" + e, (event, ...args) => {
+    webtorrent.send("client>webtorrent:" + e, ...args);
   });
 });
 
 webTorrentToClientEvents.forEach((e) => {
-  ipcMain.on("webtorrent>main:" + e, (event, ...args) => {
-    client.send("main>client:" + e, ...args);
+  ipcMain.on("webtorrent>client:" + e, (event, ...args) => {
+    client.send("webtorrent>client:" + e, ...args);
   });
 });
 
