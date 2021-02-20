@@ -3,7 +3,7 @@
   import ResultsTable from "../molecules/ResultsTable.svelte";
   import ResultPaginator from "../atoms/ResultPaginator.svelte";
   import Search from "../molecules/Search.svelte";
-  import MainLayout from "../atoms/MainLayout.svelte";
+  import MainLayout from "../templates/MainLayout.svelte";
   import FilterModal from "../molecules/FilterModal.svelte";
 
   let modalOpen = false;

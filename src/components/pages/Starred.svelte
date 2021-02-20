@@ -1,7 +1,7 @@
 <script lang="ts">
   import Masonry from "svelte-masonry/Masonry.svelte";
   import StarredCard from "../molecules/StarredCard.svelte";
-  import MainLayout from "../atoms/MainLayout.svelte";
+  import MainLayout from "../templates/MainLayout.svelte";
   import { size } from "../../helpers/constants";
   import { savedSearches } from "../../store/savedSearches";
   import { objToQueryString } from "../../helpers/query";

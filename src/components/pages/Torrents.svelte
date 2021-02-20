@@ -1,7 +1,7 @@
 <script lang="ts">
   import Masonry from "svelte-masonry/Masonry.svelte";
   import TorrentCard from "../molecules/TorrentCard.svelte";
-  import MainLayout from "../atoms/MainLayout.svelte";
+  import MainLayout from "../templates/MainLayout.svelte";
   import type { TorrentInstance } from "../../types/torrent";
   import { torrents } from "../../store/torrents";
   import { size } from "../../helpers/constants";

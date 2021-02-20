@@ -1,7 +1,7 @@
 <script>
   import Button from "../atoms/Button.svelte";
 
-  import MainLayout from "../atoms/MainLayout.svelte";
+  import MainLayout from "../templates/MainLayout.svelte";
 
   const htmlEl = document.documentElement;
 
