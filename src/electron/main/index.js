@@ -75,7 +75,11 @@ const api = require("../../../server/_api");
 ipcMain.on("client>main:neko", (event, args) => {
   api(args)
     .then((data) => {
-      client.send("main>client:neko", data);
+      if (data.status !== 500) {
+        client.send("main>client:neko", data);
+      } else {
+        client.send("main>client:neko");
+      }
     })
     .catch(() => {
       client.send("main>client:neko");
@@ -88,11 +92,16 @@ ipcMain.on("client>main:neko", (event, args) => {
 const clientToWebTorrentEvents = [
   "wt-add",
   "wt-remove",
-  "wt-presave",
+  "wt-save",
   "wt-pause",
   "wt-resume",
 ];
-const webTorrentToClientEvents = ["wt-metadata", "wt-progress"];
+const webTorrentToClientEvents = [
+  "wt-metadata",
+  "wt-progress",
+  "wt-remove",
+  "wt-save",
+];
 
 clientToWebTorrentEvents.forEach((e) => {
   ipcMain.on("client>webtorrent:" + e, (event, ...args) => {
@@ -109,12 +118,13 @@ webTorrentToClientEvents.forEach((e) => {
 /**
  * Additional Events
  */
-ipcMain.on("webtorrent>main:remove-file", (event, path) => {
+ipcMain.on("webtorrent>main:remove-file", (event, path, torrentKey) => {
   rimraf(path, (err) => {
     if (err) {
-      event.reply("rimraf-error", err);
+      // we setup webtorrent>client:wt-remove event so we will just reuse it
+      return client.send("main>client:wt-remove", torrentKey, err.message);
     }
-    event.reply("rimraf-done", "done");
+    client.send("main>client:wt-remove", torrentKey);
   });
 });
 
@@ -134,20 +144,21 @@ ipcMain.on("webtorrent>main:wt-save", (event, tmpPath, name, torrentKey) => {
         });
         if (fileExistsResponse === 0) {
           return saveFlow(newPath);
-        } else {
-          // they want to replace
-          rimraf.sync(newPath);
         }
       }
       // move torrent from tmp to their desired location
-      fse.move(path.join(tmpPath, name), newPath).then((err) => {
-        if (err) {
-          console.error(err);
-          dialog.showMessageBoxSync({ message: "Failed to save file" });
-          client.send("main>client:wt-save", torrentKey, false);
-        }
-        client.send("main>client:wt-save", torrentKey, true);
-      });
+      fse
+        .move(path.join(tmpPath, name), newPath, { overwrite: true })
+        .then((err) => {
+          if (err) {
+            console.error(err);
+            client.send("main>client:wt-save", torrentKey, err.message);
+          }
+          client.send("main>client:wt-save", torrentKey);
+        })
+        .catch((err) => {
+          client.send("main>client:wt-save", torrentKey, err.message);
+        });
     }
   };
   saveFlow(name);

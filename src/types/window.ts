@@ -9,9 +9,9 @@ export type WindowWithContextBridge = Window &
     wt: {
       add: (magnet: string, id: number) => void;
       metadata: (id: number, received: () => void) => void;
-      remove: (id: number) => void;
+      remove: (id: number, response: (err: string) => void) => void;
       progress: (listener: (torrentIdMap: WebTorrentIdMap) => void) => Function;
-      save: (id: number, saved: () => void) => void;
+      save: (id: number, response: (err: string) => void) => void;
       pause: (id: number) => void;
       resume: (magnet: string, id: number) => void;
     };

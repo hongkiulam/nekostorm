@@ -39,26 +39,41 @@ contextBridge.exposeInMainWorld("wt", {
     };
     ipcRenderer.on("webtorrent>client:wt-metadata", metaDataListener);
   },
-  remove: (id) => {
+  remove: (id, response) => {
     console.log("[webtorrent] remove torrent");
     ipcRenderer.send("client>webtorrent:wt-remove", id);
+
+    const responseListener = (event, torrentKey, err) => {
+      if (torrentKey === id) {
+        response(err);
+        ipcRenderer.removeListener(
+          "webtorrent>client:wt-remove",
+          responseListener
+        );
+        ipcRenderer.removeListener("main>client:wt-remove", responseListener);
+      }
+    };
+    ipcRenderer.on("webtorrent>client:wt-remove", responseListener);
+    ipcRenderer.on("main>client:wt-remove", responseListener);
   },
   progress: (listener) => {
     progressListeners.push(listener);
     return progressListeners.filter((l) => l !== listener);
   },
-  save: (id, cb) => {
-    ipcRenderer.send("client>webtorrent:wt-presave", id);
-    const finishedSaveListener = (event, torrentKey, success) => {
+  save: (id, response) => {
+    ipcRenderer.send("client>webtorrent:wt-save", id);
+    const responseListener = (event, torrentKey, err) => {
       if (torrentKey === id) {
-        if (success) {
-          console.log("[wt-save] Successfully saved torrent");
-          cb();
-        }
-        ipcRenderer.removeListener("main>client:wt-save", finishedSaveListener);
+        response(err);
+        ipcRenderer.removeListener("main>client:wt-save", responseListener);
+        ipcRenderer.removeListener(
+          "webtorrent>client:wt-save",
+          responseListener
+        );
       }
     };
-    ipcRenderer.on("main>client:wt-save", finishedSaveListener);
+    ipcRenderer.on("main>client:wt-save", responseListener);
+    ipcRenderer.on("webtorrent>client:wt-save", responseListener);
   },
   pause: (id) => {
     ipcRenderer.send("client>webtorrent:wt-pause", id);

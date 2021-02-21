@@ -27,8 +27,10 @@
   {#if isElectron()}
     {#if _torrents.length > 0}
       <Masonry bind:refreshLayout gridGap={size.u + "px"}>
-        {#each _torrents as torrent (torrent.searchResult.id)}
-          <TorrentCard {torrent} />
+        {#each _torrents as torrent (torrent?.searchResult?.id)}
+          {#if torrent?.searchResult?.id}
+            <TorrentCard {torrent} />
+          {/if}
         {/each}
       </Masonry>
     {:else}

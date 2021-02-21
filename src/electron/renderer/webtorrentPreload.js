@@ -72,17 +72,34 @@ setInterval(() => {
 ipcRenderer.on("client>webtorrent:wt-remove", (event, torrentKey) => {
   const foundTorrent = findTorrentFromId(torrentKey);
   console.log("[wt-remove]", torrentKey, foundTorrent);
-
+  if (!foundTorrent) {
+    return ipcRenderer.send(
+      "webtorrent>client:wt-remove",
+      torrentKey,
+      "Could not find torrent to remove"
+    );
+  }
   wtClient.remove(foundTorrent.infoHash);
-  ipcRenderer.send("webtorrent>main:remove-file", foundTorrent.path);
+  ipcRenderer.send(
+    "webtorrent>main:remove-file",
+    foundTorrent.path,
+    torrentKey
+  );
 });
 
 /**
  * Save
  */
-ipcRenderer.on("client>webtorrent:wt-presave", (event, torrentKey) => {
+ipcRenderer.on("client>webtorrent:wt-save", (event, torrentKey) => {
   const foundTorrent = findTorrentFromId(torrentKey);
   console.log("[wt-save] ", foundTorrent.path, foundTorrent.name);
+  if (!foundTorrent) {
+    return ipcRenderer.send(
+      "webtorrent>client:wt-save",
+      torrentKey,
+      "Could not find torrent to save"
+    );
+  }
   ipcRenderer.send(
     "webtorrent>main:wt-save",
     foundTorrent.path,

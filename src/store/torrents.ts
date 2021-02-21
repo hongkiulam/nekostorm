@@ -43,12 +43,32 @@ const useTorrents = () => {
   };
   const remove = (torrent: APITorrent) => {
     const { [torrent.id]: removed, ...rest } = get(torrents);
-    torrents.update(() => rest);
+    torrents.update((old) => ({
+      [torrent.id]: {
+        ...old[torrent.id],
+        loading: true,
+      },
+    }));
     if (isElectron()) {
-      (window as WindowWithContextBridge).wt.remove(torrent.id);
-      toasts.add({
-        label: `Torrent removed ${torrent.name}`,
-        kind: "danger",
+      (window as WindowWithContextBridge).wt.remove(torrent.id, (err) => {
+        if (!err) {
+          torrents.update(() => rest);
+          toasts.add({
+            label: `Torrent removed ${torrent.name}`,
+            kind: "danger",
+          });
+        } else {
+          toasts.add({
+            label: "Failed to remove torrent - " + err,
+            kind: "danger",
+          });
+          torrents.update((old) => ({
+            [torrent.id]: {
+              ...old[torrent.id],
+              loading: false,
+            },
+          }));
+        }
       });
     }
   };
@@ -59,14 +79,25 @@ const useTorrents = () => {
   };
 
   const save = (id: number) => {
-    (window as WindowWithContextBridge).wt.save(id, () => {
-      torrents.update((old) => ({
-        ...old,
-        [id]: {
-          ...old[id],
-          saved: true,
-        },
-      }));
+    (window as WindowWithContextBridge).wt.save(id, (err) => {
+      if (!err) {
+        torrents.update((old) => ({
+          ...old,
+          [id]: {
+            ...old[id],
+            saved: true,
+          },
+        }));
+        toasts.add({
+          label: "Successfully saved torrent file",
+          kind: "success",
+        });
+      } else {
+        toasts.add({
+          label: "Failed to saved torrent file - " + err,
+          kind: "danger",
+        });
+      }
     });
   };
 
