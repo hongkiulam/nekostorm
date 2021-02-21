@@ -2,6 +2,7 @@
   import { createEventDispatcher } from "svelte";
   import { push } from "svelte-spa-router";
   import { SearchIcon, FilterIcon, StarIcon } from "svelte-feather-icons/src";
+  import tippy from "sveltejs-tippy";
   import Input from "../atoms/Input.svelte";
   import { parsedQueryString } from "../../store/basic";
   import { updateQuery } from "../../helpers/query";
@@ -91,12 +92,22 @@
     <button
       on:click|preventDefault={() => {
         dispatch("filterclick");
+      }}
+      use:tippy={{
+        content: "Filter Search",
       }}><FilterIcon size="24" /></button
     >
     {#if searchQuery}
-      <button class:isSaved on:click|preventDefault={toggleSaveSearch}
-        ><StarIcon size="24" /></button
-      >
+      {#key isSaved}
+        <!-- Block is keyed so that tooltip content reacts to isSaved variable -->
+        <button
+          class:isSaved
+          on:click|preventDefault={toggleSaveSearch}
+          use:tippy={{
+            content: isSaved ? "Unstar Search" : "Star Search",
+          }}><StarIcon size="24" /></button
+        >
+      {/key}
     {/if}
     <button><SearchIcon size="24" /></button>
   </div>

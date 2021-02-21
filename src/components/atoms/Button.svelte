@@ -1,10 +1,15 @@
 <script lang="ts">
   import type { Colors } from "src/types/colors";
+  import type { TippyProps } from "../../types/tippy";
+  import tippy from "sveltejs-tippy";
 
   export let color: Colors = "primary";
   export let inverted: boolean = false;
   export let dense: boolean = false;
   export let disabled = false;
+  export let tippyProps: TippyProps = undefined as any;
+
+  const conditionalTippy = tippyProps ? tippy : () => {};
 </script>
 
 <style lang="scss">
@@ -46,6 +51,7 @@
   class:dense
   class:disabled
   {disabled}
+  use:conditionalTippy={tippyProps}
 >
   <slot />
 </button>

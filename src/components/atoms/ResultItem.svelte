@@ -2,6 +2,7 @@
   import { formatFileSize } from "../../helpers/format";
   import type { APITorrent } from "../../types/api";
   import { DownloadCloudIcon, CheckIcon } from "svelte-feather-icons/src";
+  import tippy from "sveltejs-tippy";
   import { torrents } from "../../store/torrents";
   import { size } from "../../helpers/constants";
   import { isElectron } from "../../helpers/isElectron";
@@ -84,7 +85,12 @@
   <td data-cell="seeder" {...cp}>{item.seeders}</td>
   <td data-cell="leecher" {...cp}>{item.leechers}</td>
   <td data-cell="date" {...cp}>{formatDate(item.date)}</td>
-  <td data-cell="dl" {...cp} class:isDownloaded on:click={download}
+  <td
+    data-cell="dl"
+    {...cp}
+    class:isDownloaded
+    on:click={download}
+    use:tippy={{ content: "Download Torrent" }}
     >{#if isDownloaded}
       <CheckIcon size={`${Number(size.u) * 1.5}`} />
     {:else}

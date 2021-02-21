@@ -8,6 +8,8 @@
   } from "svelte-feather-icons/src";
   import active from "svelte-spa-router/active";
   import { location, querystring, push } from "svelte-spa-router";
+  import tippy from "sveltejs-tippy";
+
   import { size } from "../../helpers/constants";
 
   const searchRegexp = /(\/\?.*)|(\/)$/g;
@@ -51,22 +53,45 @@
     <button
       on:click={navigate("/")}
       class={path.match(searchRegexp) ? "active" : ""}
-      ><SearchIcon size={size.u2} /></button
+      use:tippy={{
+        content: "Search",
+        placement: "right",
+      }}><SearchIcon size={size.u2} /></button
     >
-    <button on:click={navigate("/starred")} use:active={{ path: "/starred" }}
-      ><StarIcon size={size.u2} /></button
+    <button
+      on:click={navigate("/starred")}
+      use:active={{ path: "/starred" }}
+      use:tippy={{
+        content: "Saved Searches (Starred)",
+        placement: "right",
+      }}><StarIcon size={size.u2} /></button
     >
-    <button on:click={navigate("/torrents")} use:active={{ path: "/torrents" }}
-      ><DownloadCloudIcon size={size.u2} /></button
+    <button
+      on:click={navigate("/torrents")}
+      use:active={{ path: "/torrents" }}
+      use:tippy={{
+        content: "Torrents",
+        placement: "right",
+      }}><DownloadCloudIcon size={size.u2} /></button
     >
-    <button class="disabled" use:active={{ path: "/torrents/*" }}
-      ><DropletIcon size={size.u2} /></button
+    <button
+      class="disabled"
+      use:active={{ path: "/torrents/*" }}
+      use:tippy={{
+        content: "Torrent Detail",
+        placement: "right",
+      }}><DropletIcon size={size.u2} /></button
     >
   </div>
 
   <div class="bottom">
-    <button on:click={navigate("/settings")} use:active={{ path: "/settings" }}
-      ><SettingsIcon size={size.u2} /></button
+    <button
+      on:click={navigate("/settings")}
+      use:active={{ path: "/settings" }}
+      use:tippy={{
+        content: "Settings",
+        placement: "right",
+      }}><SettingsIcon size={size.u2} /></button
     >
   </div>
 </nav>

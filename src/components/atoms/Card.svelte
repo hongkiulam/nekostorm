@@ -3,6 +3,7 @@
   import type { Colors } from "../../types/colors";
   import { size } from "../../helpers/constants";
   import { XIcon } from "svelte-feather-icons/src";
+  import tippy from "sveltejs-tippy";
   const dispatch = createEventDispatcher();
 
   export let color: Colors = "copy-primary";
@@ -48,6 +49,7 @@
     on:mouseleave={() => {
       cardColor = color;
     }}
+    use:tippy={{ content: "Delete" }}
   >
     <XIcon size={size.u2} class="nekostorm-card-delete-icon" />
   </button>

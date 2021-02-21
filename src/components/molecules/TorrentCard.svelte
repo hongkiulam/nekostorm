@@ -11,6 +11,7 @@
     UserIcon,
   } from "svelte-feather-icons/src";
   import { Diamonds } from "svelte-loading-spinners";
+  import tippy from "sveltejs-tippy";
 
   import Card from "../atoms/Card.svelte";
 
@@ -86,17 +87,27 @@
       /></span
     >
   {:else}
-    <span class="info"
+    <span
+      class="info"
+      use:tippy={{ content: "Download Speed", delay: [500, 0] }}
       ><ArrowDownIcon size={size.u2} />{prettyBytes(downloadSpeed)}/s</span
     >
-    <span class="info"><PercentIcon size={size.u2} />{percentComplete}%</span>
-    <span class="info"
+    <span
+      class="info"
+      use:tippy={{ content: "Percentage Complete", delay: [500, 0] }}
+      ><PercentIcon size={size.u2} />{percentComplete}%</span
+    >
+    <span class="info" use:tippy={{ content: "Upload Speed", delay: [500, 0] }}
       ><ArrowUpIcon size={size.u2} />{prettyBytes(uploadSpeed)}/s</span
     >
-    <span class="info"
+    <span
+      class="info"
+      use:tippy={{ content: "Time Remaining", delay: [500, 0] }}
       ><ClockIcon size={size.u2} />{formatTime(timeRemaining)}</span
     >
-    <span class="info"><UserIcon size={size.u2} />{numPeers}</span>
+    <span class="info" use:tippy={{ content: "No. of Peers", delay: [500, 0] }}
+      ><UserIcon size={size.u2} />{numPeers}</span
+    >
     <div class="info full-span actions">
       <Button
         color={webtorrent.done ? "copy" : "warning"}
@@ -110,6 +121,7 @@
             torrents.pause(torrent.searchResult.id);
           }
         }}
+        tippyProps={{ content: "Pause/ Resume" }}
         >{#if torrent.paused}
           <PlayIcon size={size.u2} />
         {:else}
@@ -125,6 +137,7 @@
           // save
           torrents.save(torrent.searchResult.id);
         }}
+        tippyProps={{ content: "Save" }}
       >
         <SaveIcon size={size.u2} />
       </Button>

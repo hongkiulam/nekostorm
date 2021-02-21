@@ -113,3 +113,12 @@ h3 {
 ::-webkit-scrollbar-thumb {
   background-color: var(--primary);
 }
+
+[data-tippy-root] .tippy-box {
+  background-color: var(--copy-bg);
+  border: 1px solid var(--copy-primary);
+  color: var(--copy);
+}
+[data-tippy-root] .tippy-arrow {
+  display: none; /* always hide arrow */
+}

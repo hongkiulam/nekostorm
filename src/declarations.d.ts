@@ -58,3 +58,10 @@ declare module "*.png" {
 
 /* CUSTOM: ADD YOUR OWN HERE */
 declare module "svelte-loading-spinners";
+declare module "sveltejs-tippy" {
+  const ref: (
+    node: HTMLElement,
+    props: import("./types/tippy").TippyProps
+  ) => void;
+  export default ref;
+}
