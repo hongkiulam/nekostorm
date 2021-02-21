@@ -60,6 +60,12 @@ contextBridge.exposeInMainWorld("wt", {
     };
     ipcRenderer.on("main>client:wt-save", finishedSaveListener);
   },
+  pause: (id) => {
+    ipcRenderer.send("client>webtorrent:wt-pause", id);
+  },
+  resume: (magnet, id) => {
+    ipcRenderer.send("client>webtorrent:wt-resume", magnet, id);
+  },
 });
 
 const progressListeners = [];

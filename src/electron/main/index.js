@@ -85,7 +85,13 @@ ipcMain.on("client>main:neko", (event, args) => {
 /**
  * Events to pass from client to wt and vice versa
  */
-const clientToWebTorrentEvents = ["wt-add", "wt-remove", "wt-presave"];
+const clientToWebTorrentEvents = [
+  "wt-add",
+  "wt-remove",
+  "wt-presave",
+  "wt-pause",
+  "wt-resume",
+];
 const webTorrentToClientEvents = ["wt-metadata", "wt-progress"];
 
 clientToWebTorrentEvents.forEach((e) => {

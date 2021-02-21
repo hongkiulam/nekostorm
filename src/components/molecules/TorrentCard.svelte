@@ -3,7 +3,11 @@
   import {
     ArrowDownIcon,
     ArrowUpIcon,
+    ClockIcon,
+    PauseIcon,
     PercentIcon,
+    PlayIcon,
+    SaveIcon,
     UserIcon,
   } from "svelte-feather-icons/src";
   import { Diamonds } from "svelte-loading-spinners";
@@ -12,21 +16,29 @@
 
   import { webtorrents } from "../../store/webtorrents";
   import { torrents } from "../../store/torrents";
-  import { prettyBytes } from "../../helpers/format";
+  import { prettyBytes, formatTime } from "../../helpers/format";
   import type { TorrentInstance } from "../../types/torrent";
   import { size } from "../../helpers/constants";
   import Button from "../atoms/Button.svelte";
 
   export let torrent: TorrentInstance;
 
+  const NaNGuard = (num: number) => {
+    // useful when value is derived from division as x/0 or x/undefined is NaN
+    return isNaN(num) ? 0 : num;
+  };
+
   $: webtorrent = $webtorrents[torrent.searchResult.id] || {};
 
   $: downloadSpeed = webtorrent.downloadSpeed || 0;
   $: uploadSpeed = webtorrent.uploadSpeed || 0;
   $: downloaded = webtorrent.downloaded || 0;
+  $: timeRemaining = NaNGuard(webtorrent.timeRemaining / 1000); // seconds
   $: length = webtorrent.length || 0;
   $: numPeers = webtorrent.numPeers || 0;
-  $: percentComplete = ((downloaded / length) * 100).toFixed(0);
+  $: percentComplete = NaNGuard(
+    Number(((downloaded / length) * 100)?.toFixed(0))
+  );
 
   const removeTorrent = () => {
     const remove = confirm(
@@ -47,9 +59,13 @@
     &.full-span {
       grid-column: 1/3;
     }
-    :global(svg) {
+    &:not(.actions) :global(svg) {
       margin-right: var(--u);
+      flex-shrink: 0;
     }
+  }
+  .actions {
+    margin-left: auto;
   }
 </style>
 
@@ -58,7 +74,7 @@
     push("/torrents/" + torrent.searchResult.id);
   }}
   on:delete={removeTorrent}
-  color={webtorrent.done ? "success" : "warning"}
+  color={webtorrent.done ? "success" : torrent.paused ? "primary" : "warning"}
 >
   <span class="info full-span">{torrent.searchResult.name}</span>
   {#if torrent.loading}
@@ -74,24 +90,44 @@
       ><ArrowDownIcon size={size.u2} />{prettyBytes(downloadSpeed)}/s</span
     >
     <span class="info"><PercentIcon size={size.u2} />{percentComplete}%</span>
-    <span class="info"><UserIcon size={size.u2} />{numPeers}</span>
     <span class="info"
       ><ArrowUpIcon size={size.u2} />{prettyBytes(uploadSpeed)}/s</span
     >
-    <div />
-    <Button
-      color="success"
-      disabled={!webtorrent.done || torrent.saved}
-      on:click={(e) => {
-        e.stopPropagation();
-        // save
-        torrents.save(torrent.searchResult.id);
-      }}
-      >{#if torrent.saved}
-        Saved
-      {:else}
-        Save
-      {/if}</Button
+    <span class="info"
+      ><ClockIcon size={size.u2} />{formatTime(timeRemaining)}</span
     >
+    <span class="info"><UserIcon size={size.u2} />{numPeers}</span>
+    <div class="info full-span actions">
+      <Button
+        color={webtorrent.done ? "copy" : "warning"}
+        disabled={webtorrent.done}
+        inverted
+        on:click={(e) => {
+          e.stopPropagation();
+          if (torrent.paused) {
+            torrents.resume(torrent.searchResult);
+          } else {
+            torrents.pause(torrent.searchResult.id);
+          }
+        }}
+        >{#if torrent.paused}
+          <PlayIcon size={size.u2} />
+        {:else}
+          <PauseIcon size={size.u2} />
+        {/if}
+      </Button>
+      <Button
+        color={!webtorrent.done ? "copy" : "success"}
+        disabled={!webtorrent.done || torrent.saved}
+        inverted
+        on:click={(e) => {
+          e.stopPropagation();
+          // save
+          torrents.save(torrent.searchResult.id);
+        }}
+      >
+        <SaveIcon size={size.u2} />
+      </Button>
+    </div>
   {/if}
 </Card>

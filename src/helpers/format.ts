@@ -29,3 +29,27 @@ export const prettyBytes = (num: number) => {
   unit = units[exponent];
   return (neg ? "-" : "") + num + " " + unit;
 };
+
+export const formatTime = (timeInSeconds: number) => {
+  let tIS = timeInSeconds;
+  let humanised = [];
+  let d, h, m, s;
+  if (tIS / 86400 > 1) {
+    d = Math.floor(tIS / 86400);
+    tIS -= d * 86400;
+    humanised.push(`${d}d `);
+  }
+  if (tIS / 3600 > 1) {
+    h = Math.floor(tIS / 3600);
+    tIS -= h * 3600;
+    humanised.push(`${h}h `);
+  }
+  if (tIS / 60 > 1) {
+    m = Math.floor(tIS / 60);
+    tIS -= m * 60;
+    humanised.push(`${m}m `);
+  }
+  s = Math.ceil(tIS);
+  humanised.push(`${s}s`);
+  return humanised[0] + (humanised[1] || "");
+};

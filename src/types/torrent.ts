@@ -5,6 +5,7 @@ export interface TorrentInstance {
   loading: boolean;
   added: number;
   saved: boolean;
+  paused: boolean;
 }
 export interface Torrent {
   [id: number]: TorrentInstance;
@@ -23,5 +24,6 @@ export interface WebTorrentIdMap {
     };
     length: number;
     done: boolean;
+    timeRemaining: number;
   };
 }

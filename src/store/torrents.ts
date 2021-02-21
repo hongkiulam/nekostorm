@@ -21,6 +21,7 @@ const useTorrents = () => {
         loading: true,
         added: Date.now(),
         saved: false,
+        paused: false,
       },
     }));
     if (isElectron()) {
@@ -69,6 +70,28 @@ const useTorrents = () => {
     });
   };
 
+  const pause = (id: number) => {
+    (window as WindowWithContextBridge).wt.pause(id);
+    torrents.update((old) => ({
+      ...old,
+      [id]: {
+        ...old[id],
+        paused: true,
+      },
+    }));
+  };
+
+  const resume = (torrent: APITorrent) => {
+    (window as WindowWithContextBridge).wt.resume(torrent.magnet, torrent.id);
+    torrents.update((old) => ({
+      ...old,
+      [torrent.id]: {
+        ...old[torrent.id],
+        paused: false,
+      },
+    }));
+  };
+
   torrents.subscribe((t) => {
     // only save searchResult obj containing id and magnet etc...
     const savedTorrents = Object.values(t).map((x) => x.searchResult);
@@ -86,6 +109,8 @@ const useTorrents = () => {
     remove,
     exists,
     save,
+    pause,
+    resume,
   };
 };
 

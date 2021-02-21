@@ -15,18 +15,18 @@ const findTorrentFromId = (torrentKey) =>
 /**
  * Add
  */
-ipcRenderer.on("client>webtorrent:wt-add", (event, magnet, id) => {
-  console.log("[wt-add]", magnet, id);
+ipcRenderer.on("client>webtorrent:wt-add", (event, magnet, torrentKey) => {
+  console.log("[wt-add]", magnet, torrentKey);
   const torrent = wtClient.add(
     magnet,
-    { path: path.join(os.tmpdir(), "nekostorm", id.toString()) },
+    { path: path.join(os.tmpdir(), "nekostorm", torrentKey.toString()) },
     (torrent) => {
       // just need to notify of when metadata loaded, the rest will be handled with
       // setInterval below
-      ipcRenderer.send("webtorrent>client:wt-metadata", id);
+      ipcRenderer.send("webtorrent>client:wt-metadata", torrentKey);
     }
   );
-  torrent.key = id;
+  torrent.key = torrentKey;
 });
 
 /**
@@ -45,6 +45,7 @@ setInterval(() => {
         files: _files,
         length,
         done,
+        timeRemaining,
       } = torrent;
 
       const files = _files.map((f) => {
@@ -58,6 +59,7 @@ setInterval(() => {
         files,
         length,
         done,
+        timeRemaining,
       };
     }
   });
@@ -88,3 +90,25 @@ ipcRenderer.on("client>webtorrent:wt-presave", (event, torrentKey) => {
     torrentKey
   );
 });
+
+/**
+ * Pause & Resume
+ */
+ipcRenderer.on("client>webtorrent:wt-pause", (event, torrentKey) => {
+  const foundTorrent = findTorrentFromId(torrentKey);
+  console.log("[wt-pause]", torrentKey);
+  // we actually need to remove, the re add to resume
+  wtClient.remove(foundTorrent.infoHash);
+});
+ipcRenderer.on("client>webtorrent:wt-resume", (event, magnet, torrentKey) => {
+  console.log("[wt-resume]", torrentKey);
+  // re-add torrent to same path to resume
+  const torrent = wtClient.add(
+    magnet,
+    { path: path.join(os.tmpdir(), "nekostorm", torrentKey.toString()) },
+    (torrent) => {}
+  );
+  torrent.key = torrentKey;
+});
+
+// N.B. torrentKey and id are synonymous
