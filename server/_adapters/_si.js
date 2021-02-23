@@ -11,9 +11,12 @@ const si = async (query) => {
     n: 75,
     p: query.page || 1,
     user: query.user,
-    filter: query.trusted === "true" ? 2 : 1,
+    filter: 0,
     category: "1_2",
   };
+  if (query.show !== "all" && query.show) {
+    opts.filter = query.show === "trusted" ? 2 : 1;
+  }
   let searchFunction = nyaapi.si.searchPage;
   if (query.page && query.user) {
     searchFunction = nyaapi.si.searchByUserAndByPage;

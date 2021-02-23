@@ -8,11 +8,14 @@ require("../_types/adapter");
 const pantsu = async (query) => {
   const url = new URL("https://feed.animetosho.org/json");
   url.searchParams.append("only_tor", 1);
-  url.searchParams.append("filter[0][t]", "nyaa_class");
-  url.searchParams.append(
-    "filter[0][v]",
-    query.trusted === "true" ? "trusted" : "remake"
-  );
+  if (query.show !== "all" && query.show) {
+    url.searchParams.append("filter[0][t]", "nyaa_class");
+    url.searchParams.append(
+      "filter[0][v]",
+      query.show === "trusted" ? "trusted" : "remake"
+    );
+  }
+
   url.searchParams.append("q", query.q);
   let order = query.sort;
   if (query.order !== undefined) {

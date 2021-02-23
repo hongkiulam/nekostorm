@@ -6,9 +6,9 @@ require("../_types/adapter");
  * @returns {NekoResponse} nekostorm
  */
 const sanitise = (nyaasi) => {
-  if (nyaasi.status === "danger") {
-    return undefined;
-  }
+  // if (nyaasi.status === "danger") {
+  //   return undefined;
+  // }
   return {
     id: Number(nyaasi.id),
     name: nyaasi.name,

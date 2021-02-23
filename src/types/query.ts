@@ -5,7 +5,7 @@ export interface QueryObject {
   sort: SortOptions;
   order: "true" | "false";
   source: "nyaapantsu" | "nyaasi" | "animetosho";
-  trusted: string;
+  show: "all" | "noremake" | "trusted";
   [key: string]: string;
 }
 

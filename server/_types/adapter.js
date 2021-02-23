@@ -15,7 +15,7 @@
  * @property {'true'|'false'} order true=ascending false=descending
  * @property {string} user
  * @property {string} page
- * @property {'true'} trusted
+ * @property {'all' | 'noremake' | 'trusted'} show
  * @property {'nyaasi' | 'nyaapantsu' | 'animetosho'=} source
  */
 

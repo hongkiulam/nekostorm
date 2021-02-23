@@ -1,3 +1,5 @@
+import type { QueryObject } from "../types/query";
+
 export const sortOptions = [
   { label: "Date (Descending) - Default", value: "date|false" },
   { label: "Date (Ascending)", value: "date|true" },
@@ -7,15 +9,22 @@ export const sortOptions = [
   { label: "Seeders (Ascending)", value: "seeders|true" },
 ];
 
-export const sourceOptions = [
+export const sourceOptions: {
+  label: string;
+  value: QueryObject["source"];
+}[] = [
   { label: "Animetosho", value: "animetosho" },
   { label: "Nyaa Si", value: "nyaasi" },
   { label: "Nyaa Pantsu", value: "nyaapantsu" },
 ];
 
-export const trustedOptions = [
-  { label: "All results", value: "" },
-  { label: "Trusted only", value: "true" },
+export const showOptions: {
+  label: string;
+  value: QueryObject["show"];
+}[] = [
+  { label: "All results", value: "all" },
+  { label: "No remakes", value: "noremake" },
+  { label: "Trusted only", value: "trusted" },
 ];
 
 export const size = {

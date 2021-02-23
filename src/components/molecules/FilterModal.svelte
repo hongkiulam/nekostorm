@@ -3,7 +3,7 @@
   import {
     sortOptions,
     sourceOptions,
-    trustedOptions,
+    showOptions,
   } from "../../helpers/constants";
   import { parsedQueryString } from "../../store/basic";
 
@@ -22,7 +22,7 @@
     sortOrder += $parsedQueryString.order || "false";
   }
   $: [sort, order] = sortOrder.split("|");
-  let trusted = $parsedQueryString.trusted || "";
+  let show = $parsedQueryString.show || "all";
 </script>
 
 <style>
@@ -57,11 +57,11 @@
     />
   </label>
   <label for="">
-    Reputation
+    Show
     <Input
       select
-      bind:value={trusted}
-      options={trustedOptions}
+      bind:value={show}
+      options={showOptions}
       disabled={source === "nyaapantsu"}
     />
   </label>
@@ -76,7 +76,7 @@
     <Button
       on:click={() => {
         open = false;
-        updateQuery({ user, sort, order, source, trusted });
+        updateQuery({ user, sort, order, source, show });
       }}>Save</Button
     >
   </div>
