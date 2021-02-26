@@ -4,8 +4,8 @@ export interface TorrentInstance {
   searchResult: APITorrent;
   loading: boolean;
   added: number;
-  saved: boolean;
-  paused: boolean;
+  saveState: "notsaved" | "saving" | "saved";
+  pauseState: "running" | "pausing" | "paused" | "resuming";
 }
 export interface Torrent {
   [id: number]: TorrentInstance;

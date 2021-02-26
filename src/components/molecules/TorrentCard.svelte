@@ -43,7 +43,9 @@
 
   const removeTorrent = () => {
     const remove = confirm(
-      "This action will remove the downloaded files, do you want to continue?"
+      torrent.saveState === "saved"
+        ? "Are you sure you want to remove this torrent? Saved data will not be removed"
+        : "This action will remove the downloaded files, do you want to continue?"
     );
     if (remove) {
       torrents.remove(torrent.searchResult);
@@ -75,7 +77,11 @@
     push("/torrents/" + torrent.searchResult.id);
   }}
   on:delete={removeTorrent}
-  color={webtorrent.done ? "success" : torrent.paused ? "primary" : "warning"}
+  color={webtorrent.done
+    ? "success"
+    : torrent.pauseState === "paused"
+    ? "primary"
+    : "warning"}
 >
   <span class="info full-span">{torrent.searchResult.name}</span>
   {#if torrent.loading}
@@ -115,22 +121,24 @@
         inverted
         on:click={(e) => {
           e.stopPropagation();
-          if (torrent.paused) {
+          if (torrent.pauseState === "paused") {
             torrents.resume(torrent.searchResult);
-          } else {
-            torrents.pause(torrent.searchResult.id);
+          } else if (torrent.pauseState === "running") {
+            torrents.pause(torrent.searchResult);
           }
         }}
         tippyProps={{ content: "Pause/ Resume" }}
-        >{#if torrent.paused}
+        >{#if torrent.pauseState === "paused"}
           <PlayIcon size={size.u2} />
-        {:else}
+        {:else if torrent.pauseState === "running"}
           <PauseIcon size={size.u2} />
+        {:else}
+          <Diamonds size={Number(size.u2)} color="var(--warning)" unit="px" />
         {/if}
       </Button>
       <Button
         color={!webtorrent.done ? "copy" : "success"}
-        disabled={!webtorrent.done || torrent.saved}
+        disabled={!webtorrent.done || torrent.saveState === "saved"}
         inverted
         on:click={(e) => {
           e.stopPropagation();
@@ -139,7 +147,11 @@
         }}
         tippyProps={{ content: "Save" }}
       >
-        <SaveIcon size={size.u2} />
+        {#if torrent.saveState === "saving"}
+          <Diamonds size={Number(size.u2)} color="var(--success)" unit="px" />
+        {:else}
+          <SaveIcon size={size.u2} />
+        {/if}
       </Button>
     </div>
   {/if}

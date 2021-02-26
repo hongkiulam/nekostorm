@@ -101,6 +101,8 @@ const webTorrentToClientEvents = [
   "wt-progress",
   "wt-remove",
   "wt-save",
+  "wt-pause",
+  "wt-resume",
 ];
 
 clientToWebTorrentEvents.forEach((e) => {
@@ -159,6 +161,8 @@ ipcMain.on("webtorrent>main:wt-save", (event, tmpPath, name, torrentKey) => {
         .catch((err) => {
           client.send("main>client:wt-save", torrentKey, err.message);
         });
+    } else {
+      client.send("main>client:wt-save", torrentKey, "cancelled");
     }
   };
   saveFlow(name);

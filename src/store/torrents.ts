@@ -20,8 +20,8 @@ const useTorrents = () => {
         searchResult: torrent,
         loading: true,
         added: Date.now(),
-        saved: false,
-        paused: false,
+        saveState: "notsaved",
+        pauseState: "running",
       },
     }));
     if (isElectron()) {
@@ -85,7 +85,7 @@ const useTorrents = () => {
           ...old,
           [id]: {
             ...old[id],
-            saved: true,
+            saveState: "saved",
           },
         }));
         toasts.add({
@@ -97,28 +97,95 @@ const useTorrents = () => {
           label: "Failed to saved torrent file - " + err,
           kind: "danger",
         });
+        torrents.update((old) => ({
+          ...old,
+          [id]: {
+            ...old[id],
+            saveState: "notsaved",
+          },
+        }));
       }
     });
-  };
-
-  const pause = (id: number) => {
-    (window as WindowWithContextBridge).wt.pause(id);
     torrents.update((old) => ({
       ...old,
       [id]: {
         ...old[id],
-        paused: true,
+        saveState: "saving",
+      },
+    }));
+  };
+
+  const pause = (torrent: APITorrent) => {
+    (window as WindowWithContextBridge).wt.pause(
+      torrent.magnet,
+      torrent.id,
+      (err) => {
+        if (err) {
+          torrents.update((old) => ({
+            ...old,
+            [torrent.id]: {
+              ...old[torrent.id],
+              pauseState: "running",
+            },
+          }));
+          toasts.add({
+            label: "Failed to pause torrent - " + err,
+            kind: "danger",
+          });
+        } else {
+          torrents.update((old) => ({
+            ...old,
+            [torrent.id]: {
+              ...old[torrent.id],
+              pauseState: "paused",
+            },
+          }));
+        }
+      }
+    );
+    // show paused status and wait for final result from above callback
+    torrents.update((old) => ({
+      ...old,
+      [torrent.id]: {
+        ...old[torrent.id],
+        pauseState: "pausing",
       },
     }));
   };
 
   const resume = (torrent: APITorrent) => {
-    (window as WindowWithContextBridge).wt.resume(torrent.magnet, torrent.id);
+    (window as WindowWithContextBridge).wt.resume(
+      torrent.magnet,
+      torrent.id,
+      (err) => {
+        if (err) {
+          torrents.update((old) => ({
+            ...old,
+            [torrent.id]: {
+              ...old[torrent.id],
+              paused: "paused",
+            },
+          }));
+          toasts.add({
+            label: "Failed to resume torrent - " + err,
+            kind: "danger",
+          });
+        } else {
+          torrents.update((old) => ({
+            ...old,
+            [torrent.id]: {
+              ...old[torrent.id],
+              pauseState: "running",
+            },
+          }));
+        }
+      }
+    );
     torrents.update((old) => ({
       ...old,
       [torrent.id]: {
         ...old[torrent.id],
-        paused: false,
+        pauseState: "resuming",
       },
     }));
   };

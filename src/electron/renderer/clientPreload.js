@@ -1,8 +1,6 @@
 // coptied from https://stackoverflow.com/a/59796326
 const { contextBridge, ipcRenderer } = require("electron");
-const WT = require("webtorrent");
 
-const wtClient = new WT();
 // Expose protected methods that allow the renderer process to use
 // the ipcRenderer without exposing the entire object
 contextBridge.exposeInMainWorld("api", {
@@ -75,11 +73,31 @@ contextBridge.exposeInMainWorld("wt", {
     ipcRenderer.on("main>client:wt-save", responseListener);
     ipcRenderer.on("webtorrent>client:wt-save", responseListener);
   },
-  pause: (id) => {
-    ipcRenderer.send("client>webtorrent:wt-pause", id);
+  pause: (magnet, id, response) => {
+    ipcRenderer.send("client>webtorrent:wt-pause", magnet, id);
+    const responseListener = (event, torrentKey, err) => {
+      if (torrentKey === id) {
+        response(err);
+        ipcRenderer.removeListener(
+          "webtorrent>client:wt-pause",
+          responseListener
+        );
+      }
+    };
+    ipcRenderer.on("webtorrent>client:wt-pause", responseListener);
   },
-  resume: (magnet, id) => {
+  resume: (magnet, id, response) => {
     ipcRenderer.send("client>webtorrent:wt-resume", magnet, id);
+    const responseListener = (event, torrentKey, err) => {
+      if (torrentKey === id) {
+        response(err);
+        ipcRenderer.removeListener(
+          "webtorrent>client:wt-resume",
+          responseListener
+        );
+      }
+    };
+    ipcRenderer.on("webtorrent>client:wt-resume", responseListener);
   },
 });
 

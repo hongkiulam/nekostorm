@@ -12,7 +12,15 @@ export type WindowWithContextBridge = Window &
       remove: (id: number, response: (err: string) => void) => void;
       progress: (listener: (torrentIdMap: WebTorrentIdMap) => void) => Function;
       save: (id: number, response: (err: string) => void) => void;
-      pause: (id: number) => void;
-      resume: (magnet: string, id: number) => void;
+      pause: (
+        magnet: string,
+        id: number,
+        response: (err: string) => void
+      ) => void;
+      resume: (
+        magnet: string,
+        id: number,
+        response: (err: string) => void
+      ) => void;
     };
   };

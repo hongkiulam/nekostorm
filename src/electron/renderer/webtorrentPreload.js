@@ -6,6 +6,11 @@ const { ipcRenderer } = require("electron");
 const WT = require("webtorrent");
 
 const wtClient = new WT();
+
+wtClient.on("error", (err) => {
+  // Probably hook this up to show a toast client side
+  console.log(err);
+});
 // Expose protected methods that allow the renderer process to use
 // the ipcRenderer without exposing the entire object
 
@@ -111,21 +116,33 @@ ipcRenderer.on("client>webtorrent:wt-save", (event, torrentKey) => {
 /**
  * Pause & Resume
  */
-ipcRenderer.on("client>webtorrent:wt-pause", (event, torrentKey) => {
-  const foundTorrent = findTorrentFromId(torrentKey);
+ipcRenderer.on("client>webtorrent:wt-pause", (event, magnet, torrentKey) => {
   console.log("[wt-pause]", torrentKey);
   // we actually need to remove, the re add to resume
-  wtClient.remove(foundTorrent.infoHash);
+  wtClient.remove(magnet, (err) => {
+    ipcRenderer.send("webtorrent>client:wt-pause", torrentKey, err);
+  });
 });
+
 ipcRenderer.on("client>webtorrent:wt-resume", (event, magnet, torrentKey) => {
-  console.log("[wt-resume]", torrentKey);
+  console.log("[wt-resume]", torrentKey, magnet);
   // re-add torrent to same path to resume
   const torrent = wtClient.add(
     magnet,
     { path: path.join(os.tmpdir(), "nekostorm", torrentKey.toString()) },
-    (torrent) => {}
+    (torrent) => {
+      console.log("[wt-resume] received metadata");
+      ipcRenderer.send("webtorrent>client:wt-resume", torrentKey);
+    }
   );
   torrent.key = torrentKey;
+  setTimeout(() => {
+    ipcRenderer.send(
+      "webtorrent>client:wt-resume",
+      torrentKey,
+      "could not resume torrent within 5 seconds"
+    );
+  }, 5000);
 });
 
 // N.B. torrentKey and id are synonymous
