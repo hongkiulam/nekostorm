@@ -131,18 +131,29 @@ ipcRenderer.on("client>webtorrent:wt-resume", (event, magnet, torrentKey) => {
     magnet,
     { path: path.join(os.tmpdir(), "nekostorm", torrentKey.toString()) },
     (torrent) => {
-      console.log("[wt-resume] received metadata");
       ipcRenderer.send("webtorrent>client:wt-resume", torrentKey);
     }
   );
   torrent.key = torrentKey;
-  setTimeout(() => {
-    ipcRenderer.send(
-      "webtorrent>client:wt-resume",
-      torrentKey,
-      "could not resume torrent within 5 seconds"
-    );
-  }, 5000);
+
+  torrent.on("noPeers", () => {
+    console.log("[wt-resume] noPeers");
+  });
+  torrent.on("metadata", () => {
+    console.log("[wt-resume] metadata");
+  });
+  torrent.on("ready", () => {
+    console.log("[wt-resume] ready");
+  });
+  torrent.on("warning", (err) => {
+    console.log("[wt-resume] warning", err);
+  });
+  torrent.on("error", (err) => {
+    console.log("[wt-resume] error", err);
+  });
+  torrent.on("done", () => {
+    console.log("[wt-resume] done");
+  });
 });
 
 // N.B. torrentKey and id are synonymous
