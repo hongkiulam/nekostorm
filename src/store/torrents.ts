@@ -1,5 +1,5 @@
 import { get, writable } from "svelte/store";
-import type { Torrent } from "../types/torrent";
+import type { Torrent, TorrentInstance } from "../types/torrent";
 import type { APITorrent } from "../types/api";
 import { isElectron } from "../helpers/isElectron";
 import type { WindowWithContextBridge } from "src/types/window";
@@ -12,6 +12,19 @@ const useTorrents = () => {
   const torrentsFromStorage: APITorrent[] = JSON.parse(
     localStorage.getItem(torrentStorageKey) || "[]"
   );
+
+  const _updateTorrentById = (
+    torrentId: number,
+    newState: Partial<TorrentInstance>
+  ) => {
+    torrents.update((old) => ({
+      ...old,
+      [torrentId]: {
+        ...old[torrentId],
+        ...newState,
+      },
+    }));
+  };
 
   const add = (torrent: APITorrent) => {
     torrents.update((old) => ({
@@ -27,13 +40,7 @@ const useTorrents = () => {
     if (isElectron()) {
       (window as WindowWithContextBridge).wt.add(torrent.magnet, torrent.id);
       (window as WindowWithContextBridge).wt.metadata(torrent.id, () => {
-        torrents.update((old) => ({
-          ...old,
-          [torrent.id]: {
-            ...old[torrent.id],
-            loading: false,
-          },
-        }));
+        _updateTorrentById(torrent.id, { loading: false });
       });
       toasts.add({
         label: `Torrent queued ${torrent.name}`,
@@ -43,12 +50,7 @@ const useTorrents = () => {
   };
   const remove = (torrent: APITorrent) => {
     const { [torrent.id]: removed, ...rest } = get(torrents);
-    torrents.update((old) => ({
-      [torrent.id]: {
-        ...old[torrent.id],
-        loading: true,
-      },
-    }));
+    _updateTorrentById(torrent.id, { loading: true });
     if (isElectron()) {
       (window as WindowWithContextBridge).wt.remove(torrent.id, (err) => {
         if (!err) {
@@ -62,12 +64,7 @@ const useTorrents = () => {
             label: "Failed to remove torrent - " + err,
             kind: "danger",
           });
-          torrents.update((old) => ({
-            [torrent.id]: {
-              ...old[torrent.id],
-              loading: false,
-            },
-          }));
+          _updateTorrentById(torrent.id, { loading: false });
         }
       });
     }
@@ -81,13 +78,7 @@ const useTorrents = () => {
   const save = (id: number) => {
     (window as WindowWithContextBridge).wt.save(id, (err) => {
       if (!err) {
-        torrents.update((old) => ({
-          ...old,
-          [id]: {
-            ...old[id],
-            saveState: "saved",
-          },
-        }));
+        _updateTorrentById(id, { saveState: "saved" });
         toasts.add({
           label: "Successfully saved torrent file",
           kind: "success",
@@ -97,22 +88,10 @@ const useTorrents = () => {
           label: "Failed to saved torrent file - " + err,
           kind: "danger",
         });
-        torrents.update((old) => ({
-          ...old,
-          [id]: {
-            ...old[id],
-            saveState: "notsaved",
-          },
-        }));
+        _updateTorrentById(id, { saveState: "notsaved" });
       }
     });
-    torrents.update((old) => ({
-      ...old,
-      [id]: {
-        ...old[id],
-        saveState: "saving",
-      },
-    }));
+    _updateTorrentById(id, { saveState: "saving" });
   };
 
   const pause = (torrent: APITorrent) => {
@@ -121,36 +100,18 @@ const useTorrents = () => {
       torrent.id,
       (err) => {
         if (err) {
-          torrents.update((old) => ({
-            ...old,
-            [torrent.id]: {
-              ...old[torrent.id],
-              pauseState: "running",
-            },
-          }));
+          _updateTorrentById(torrent.id, { pauseState: "running" });
           toasts.add({
             label: "Failed to pause torrent - " + err,
             kind: "danger",
           });
         } else {
-          torrents.update((old) => ({
-            ...old,
-            [torrent.id]: {
-              ...old[torrent.id],
-              pauseState: "paused",
-            },
-          }));
+          _updateTorrentById(torrent.id, { pauseState: "paused" });
         }
       }
     );
     // show paused status and wait for final result from above callback
-    torrents.update((old) => ({
-      ...old,
-      [torrent.id]: {
-        ...old[torrent.id],
-        pauseState: "pausing",
-      },
-    }));
+    _updateTorrentById(torrent.id, { pauseState: "pausing" });
   };
 
   const resume = (torrent: APITorrent) => {
@@ -159,35 +120,18 @@ const useTorrents = () => {
       torrent.id,
       (err) => {
         if (err) {
-          torrents.update((old) => ({
-            ...old,
-            [torrent.id]: {
-              ...old[torrent.id],
-              paused: "paused",
-            },
-          }));
+          _updateTorrentById(torrent.id, { pauseState: "paused" });
+
           toasts.add({
             label: "Failed to resume torrent - " + err,
             kind: "danger",
           });
         } else {
-          torrents.update((old) => ({
-            ...old,
-            [torrent.id]: {
-              ...old[torrent.id],
-              pauseState: "running",
-            },
-          }));
+          _updateTorrentById(torrent.id, { pauseState: "running" });
         }
       }
     );
-    torrents.update((old) => ({
-      ...old,
-      [torrent.id]: {
-        ...old[torrent.id],
-        pauseState: "resuming",
-      },
-    }));
+    _updateTorrentById(torrent.id, { pauseState: "resuming" });
   };
 
   torrents.subscribe((t) => {
