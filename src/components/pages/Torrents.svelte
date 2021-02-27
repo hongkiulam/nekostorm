@@ -1,21 +1,20 @@
 <script lang="ts">
-  import Masonry from "svelte-masonry/Masonry.svelte";
+  import { onDestroy } from "svelte";
+  import Masonry from "../atoms/Masonry.svelte";
   import TorrentCard from "../molecules/TorrentCard.svelte";
   import MainLayout from "../templates/MainLayout.svelte";
   import type { TorrentInstance } from "../../types/torrent";
   import { torrents } from "../../store/torrents";
-  import { size } from "../../helpers/constants";
   import { isElectron } from "../../helpers/isElectron";
 
-  let refreshLayout: () => Promise<void>;
+  let recalculate = () => {};
 
-  $: {
-    refreshLayout?.();
-    $torrents; // refresh layout when torrents changes
-  }
-  $: {
-    console.log($torrents);
-  }
+  const refreshLayout = window.setInterval(() => {
+    recalculate();
+  }, 1000);
+  onDestroy(() => {
+    clearInterval(refreshLayout);
+  });
 
   $: _torrents = Object.values($torrents).sort(
     (a, b) => a.added - b.added
@@ -26,7 +25,14 @@
   <h2 slot="header">Torrents</h2>
   {#if isElectron()}
     {#if _torrents.length > 0}
-      <Masonry bind:refreshLayout gridGap={size.u + "px"}>
+      <Masonry
+        bind:recalculate
+        columns={3}
+        breakAt={{
+          940: 2,
+          600: 1,
+        }}
+      >
         {#each _torrents as torrent (torrent?.searchResult?.id)}
           {#if torrent?.searchResult?.id}
             <TorrentCard {torrent} />

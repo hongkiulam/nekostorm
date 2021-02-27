@@ -5,8 +5,19 @@
   import Search from "../molecules/Search.svelte";
   import MainLayout from "../templates/MainLayout.svelte";
   import FilterModal from "../molecules/FilterModal.svelte";
+  import { updateQuery } from "../../helpers/query";
+  import { prevParsedQueryString } from "../../store/basic";
+  import defaults from "../../helpers/defaults";
 
   let modalOpen = false;
+
+  if (defaults.filter.get()) {
+    updateQuery(defaults.filter.get());
+  }
+
+  if ($prevParsedQueryString) {
+    updateQuery($prevParsedQueryString);
+  }
 </script>
 
 <style lang="scss">
@@ -52,5 +63,7 @@
       <ResultPaginator />
     </div>
   {/if}
-  <FilterModal bind:open={modalOpen} />
+  {#if modalOpen}
+    <FilterModal bind:open={modalOpen} />
+  {/if}
 </MainLayout>

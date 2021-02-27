@@ -65,3 +65,5 @@ declare module "sveltejs-tippy" {
   ) => void;
   export default ref;
 }
+
+declare module "macy";

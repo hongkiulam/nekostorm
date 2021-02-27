@@ -1,16 +1,18 @@
 <script>
-  import { updateQuery } from "../../helpers/query";
+  import Button from "../atoms/Button.svelte";
+
+  import Input from "../atoms/Input.svelte";
+  import Modal from "../atoms/Modal.svelte";
+  import { parsedQueryString } from "../../store/basic";
+
   import {
     sortOptions,
     sourceOptions,
     showOptions,
   } from "../../helpers/constants";
-  import { parsedQueryString } from "../../store/basic";
+  import { updateQuery } from "../../helpers/query";
+  import defaults from "../../helpers/defaults";
 
-  import Button from "../atoms/Button.svelte";
-
-  import Input from "../atoms/Input.svelte";
-  import Modal from "../atoms/Modal.svelte";
   export let open = false;
 
   let source = $parsedQueryString.source || sourceOptions[0].value;
@@ -21,8 +23,17 @@
     sortOrder += "|";
     sortOrder += $parsedQueryString.order || "false";
   }
-  $: [sort, order] = sortOrder.split("|");
+  $: [sort, order] = sortOrder.split("|") as [SortOptions, "true" | "false"];
   let show = $parsedQueryString.show || "all";
+
+  $: filterObj = {
+    source,
+    user,
+    sort,
+    order,
+    show,
+  };
+  $: isDefaultFilter = defaults.filter.matches(filterObj);
 </script>
 
 <style>
@@ -66,6 +77,15 @@
     />
   </label>
   <div class="button-group">
+    <Button
+      color="primary-light"
+      inverted
+      disabled={isDefaultFilter}
+      on:click={() => {
+        defaults.filter.set(filterObj);
+        isDefaultFilter = true;
+      }}>Set as default filter</Button
+    >
     <Button
       color="warning"
       inverted

@@ -5,7 +5,7 @@
   import tippy from "sveltejs-tippy";
   import Input from "../atoms/Input.svelte";
   import { parsedQueryString } from "../../store/basic";
-  import { updateQuery } from "../../helpers/query";
+  import { objToQueryString, updateQuery } from "../../helpers/query";
   import { savedSearches } from "../../store/savedSearches";
 
   export let value: string = "";
@@ -37,7 +37,8 @@
 
   /** Reactive Statements */
   $: if (value === "") {
-    push("/");
+    const { q, ...newQuery } = $parsedQueryString;
+    push("/?" + objToQueryString(newQuery));
   }
 
   $: {

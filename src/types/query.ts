@@ -10,3 +10,7 @@ export interface QueryObject {
 }
 
 export type SortOptions = "date" | "size" | "seeders";
+export type Filters = Pick<
+  QueryObject,
+  "source" | "sort" | "order" | "show" | "user"
+>;

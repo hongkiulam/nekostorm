@@ -1,16 +1,18 @@
 <script lang="ts">
-  import Masonry from "svelte-masonry/Masonry.svelte";
+  import { onDestroy } from "svelte";
+  import Masonry from "../atoms/Masonry.svelte";
   import StarredCard from "../molecules/StarredCard.svelte";
   import MainLayout from "../templates/MainLayout.svelte";
-  import { size } from "../../helpers/constants";
   import { savedSearches } from "../../store/savedSearches";
   import { objToQueryString } from "../../helpers/query";
-  let refreshLayout: () => Promise<void>;
+  let recalculate = () => {};
 
-  $: {
-    refreshLayout?.();
-    $savedSearches; // refresh layout when savedSearches changes
-  }
+  const refreshLayout = window.setInterval(() => {
+    recalculate();
+  }, 1000);
+  onDestroy(() => {
+    clearInterval(refreshLayout);
+  });
 </script>
 
 <style lang="scss">
@@ -26,7 +28,11 @@
 <MainLayout>
   <h2 slot="header">Starred</h2>
   {#if $savedSearches.length > 0}
-    <Masonry bind:refreshLayout gridGap={size.u + "px"}>
+    <Masonry
+      bind:recalculate
+      columns={5}
+      breakAt={{ 1300: 4, 1100: 3, 900: 2, 700: 1 }}
+    >
       {#each $savedSearches as sS (objToQueryString(sS))}
         <StarredCard search={sS} />
       {/each}
