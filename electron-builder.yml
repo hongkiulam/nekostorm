@@ -1,5 +1,6 @@
 appId: "com.nekostorm"
 productName: "nekostorm"
+copyright: "Copyright © 2021 Haydon Lam"
 
 # electron-builder ignores build folder, specify to include
 # alongside other folders to include
@@ -11,10 +12,15 @@ files:
   - "server/"
 
 directories:
+  buildResources: "electron-build-resources"
   output: "out-eb"
 
 win:
-  target: "zip"
+  target:
+    - "zip"
+    - "nsis"
 
 linux:
-  target: "zip"
+  target:
+    - "zip"
+    - "AppImage"
