@@ -22,5 +22,11 @@ export type WindowWithContextBridge = Window &
         id: number,
         response: (err: string) => void
       ) => void;
+      requestSavePath: () => string | undefined;
+      // requestSavePath: (response: (savePath: string) => void) => void;
+    };
+    "wt-localStorage": {
+      setItem: Storage["setItem"];
+      getItem: (key: string, received: (value: string) => void) => void;
     };
   };

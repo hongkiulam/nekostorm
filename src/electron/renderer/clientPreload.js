@@ -19,6 +19,32 @@ contextBridge.exposeInMainWorld("api", {
   },
 });
 
+// For interacting with localStorage on webtorrent renderer
+contextBridge.exposeInMainWorld("wt-localStorage", {
+  /**
+   * @type {Storage['setItem']}
+   */
+  setItem: (...args) => {
+    ipcRenderer.send("client>webtorrent:wt-localStorage-setItem", ...args);
+  },
+  /**
+   * @type {{key: string; received: function}}
+   */
+  getItem: (key, cb) => {
+    ipcRenderer.send("client>webtorrent:wt-localStorage-getItem", key);
+    const receive = (event, _key, value) => {
+      if (key === _key) {
+        cb(value);
+        ipcRenderer.removeListener(
+          "webtorrent>client:wt-localStorage-getItem",
+          receive
+        );
+      }
+    };
+    ipcRenderer.on("webtorrent>client:wt-localStorage-getItem", receive);
+  },
+});
+
 contextBridge.exposeInMainWorld("wt", {
   add: (magnet, id) => {
     console.log("[webtorrent] add torrent", magnet);
@@ -98,6 +124,9 @@ contextBridge.exposeInMainWorld("wt", {
       }
     };
     ipcRenderer.on("webtorrent>client:wt-resume", responseListener);
+  },
+  requestSavePath: () => {
+    return ipcRenderer.sendSync("client>main:wt-request-save-path");
   },
 });
 

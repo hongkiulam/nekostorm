@@ -95,6 +95,8 @@ const clientToWebTorrentEvents = [
   "wt-save",
   "wt-pause",
   "wt-resume",
+  "wt-localStorage-getItem",
+  "wt-localStorage-setItem",
 ];
 const webTorrentToClientEvents = [
   "wt-metadata",
@@ -103,6 +105,7 @@ const webTorrentToClientEvents = [
   "wt-save",
   "wt-pause",
   "wt-resume",
+  "wt-localStorage-getItem",
 ];
 
 clientToWebTorrentEvents.forEach((e) => {
@@ -130,40 +133,54 @@ ipcMain.on("webtorrent>main:remove-file", (event, path, torrentKey) => {
   });
 });
 
-ipcMain.on("webtorrent>main:wt-save", (event, tmpPath, name, torrentKey) => {
-  const saveFlow = (defaultPath) => {
-    const newPath = dialog.showSaveDialogSync({
-      title: "Save Torrent",
-      defaultPath,
-    });
+ipcMain.on(
+  "webtorrent>main:wt-save",
+  (event, tmpPath, name, torrentKey, defaultSavePath = "") => {
+    const saveFlow = (defaultPath) => {
+      const newPath = dialog.showSaveDialogSync({
+        title: "Save Torrent",
+        defaultPath,
+      });
 
-    if (newPath) {
-      if (fs.existsSync(newPath)) {
-        const fileExistsResponse = dialog.showMessageBoxSync({
-          message:
-            "File already exists, do you want to replace the existing file?",
-          buttons: ["No", "Yes"],
-        });
-        if (fileExistsResponse === 0) {
-          return saveFlow(newPath);
-        }
-      }
-      // move torrent from tmp to their desired location
-      fse
-        .move(path.join(tmpPath, name), newPath, { overwrite: true })
-        .then((err) => {
-          if (err) {
-            console.error(err);
-            client.send("main>client:wt-save", torrentKey, err.message);
+      if (newPath) {
+        if (fs.existsSync(newPath)) {
+          const fileExistsResponse = dialog.showMessageBoxSync({
+            message:
+              "File already exists, do you want to replace the existing file?",
+            buttons: ["No", "Yes"],
+          });
+          if (fileExistsResponse === 0) {
+            return saveFlow(newPath);
           }
-          client.send("main>client:wt-save", torrentKey);
-        })
-        .catch((err) => {
-          client.send("main>client:wt-save", torrentKey, err.message);
-        });
-    } else {
-      client.send("main>client:wt-save", torrentKey, "cancelled");
-    }
-  };
-  saveFlow(name);
+        }
+        // move torrent from tmp to their desired location
+        fse
+          .move(path.join(tmpPath, name), newPath, { overwrite: true })
+          .then((err) => {
+            if (err) {
+              console.error(err);
+              client.send("main>client:wt-save", torrentKey, err.message);
+            }
+            client.send("main>client:wt-save", torrentKey);
+          })
+          .catch((err) => {
+            client.send("main>client:wt-save", torrentKey, err.message);
+          });
+      } else {
+        client.send("main>client:wt-save", torrentKey, "cancelled");
+      }
+    };
+    saveFlow(path.join(defaultSavePath, name));
+  }
+);
+
+ipcMain.on("client>main:wt-request-save-path", (event) => {
+  const filePaths = dialog.showOpenDialogSync({
+    properties: ["openDirectory"],
+  });
+  if (filePaths && filePaths.length > 0) {
+    event.returnValue = filePaths[0];
+  } else {
+    event.returnValue = undefined;
+  }
 });

@@ -4,6 +4,7 @@ import type { APITorrent } from "../types/api";
 import { isElectron } from "../helpers/isElectron";
 import type { WindowWithContextBridge } from "src/types/window";
 import { toasts } from "./toasts";
+import defaults from "../helpers/defaults";
 
 const torrentStorageKey = "nekostorm-torrents";
 
@@ -26,14 +27,17 @@ const useTorrents = () => {
     }));
   };
 
-  const add = (torrent: APITorrent) => {
+  const add = async (torrent: APITorrent) => {
+    const defaultSavePath = await defaults.savePath.get();
+    const directSave = JSON.parse(await defaults.directSave.get());
+
     torrents.update((old) => ({
       ...old,
       [torrent.id]: {
         searchResult: torrent,
         loading: true,
         added: Date.now(),
-        saveState: "notsaved",
+        saveState: defaultSavePath && directSave ? "saved" : "notsaved",
         pauseState: "running",
       },
     }));
@@ -48,6 +52,7 @@ const useTorrents = () => {
       });
     }
   };
+
   const remove = (torrent: APITorrent) => {
     const { [torrent.id]: removed, ...rest } = get(torrents);
     _updateTorrentById(torrent.id, { loading: true });
