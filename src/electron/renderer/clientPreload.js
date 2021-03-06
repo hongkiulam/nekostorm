@@ -4,18 +4,13 @@ const { contextBridge, ipcRenderer } = require("electron");
 // Expose protected methods that allow the renderer process to use
 // the ipcRenderer without exposing the entire object
 contextBridge.exposeInMainWorld("api", {
-  send: (channel, data) => {
-    // whitelist channels
-    let validChannels = ["client>main:neko"];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data);
-    }
-  },
-  receive: (channel, func) => {
-    let validChannels = ["main>client:neko"];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.on(channel, (event, ...args) => func(...args));
-    }
+  fetch: (data) => {
+    return new Promise((res, rej) => {
+      ipcRenderer.send("client>main:neko", data);
+      ipcRenderer.once("main>client:neko", (event, response) => {
+        res(response);
+      });
+    });
   },
 });
 

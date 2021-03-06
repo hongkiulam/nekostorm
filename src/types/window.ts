@@ -1,10 +1,11 @@
+import type { APITorrent } from "./api";
+import type { QueryObject } from "./query";
 import type { WebTorrentIdMap } from "./torrent";
 
 export type WindowWithContextBridge = Window &
   typeof globalThis & {
     api: {
-      send: () => void;
-      receive: () => void;
+      fetch: (queryObj: QueryObject) => Promise<APITorrent[] | undefined>;
     };
     wt: {
       add: (magnet: string, id: number) => void;

@@ -2,6 +2,8 @@ import type { APITorrent } from "../types/api";
 import qs from "query-string";
 import { isElectron } from "./isElectron";
 import { toasts } from "../store/toasts";
+import type { WindowWithContextBridge } from "../types/window";
+import type { QueryObject } from "../types/query";
 const API_URL = "/.netlify/functions/api";
 
 const failedToFetch = () => {
@@ -29,10 +31,10 @@ const nekoFetchNetlify = async (queryString: string): Promise<APITorrent[]> => {
 const nekoFetchElectron = async (
   queryString: string
 ): Promise<APITorrent[]> => {
-  const queryObj = qs.parse(queryString);
+  const queryObj = qs.parse(queryString) as QueryObject;
   return new Promise((res, rej) => {
-    const api = (window as any).api;
-    api.receive("main>client:neko", (data: APITorrent[]) => {
+    const api = (window as WindowWithContextBridge).api;
+    api.fetch(queryObj).then((data) => {
       if (data) {
         res(data);
       } else {
@@ -40,7 +42,6 @@ const nekoFetchElectron = async (
         failedToFetch();
       }
     });
-    api.send("client>main:neko", queryObj);
   });
 };
 export const nekoFetch = isElectron() ? nekoFetchElectron : nekoFetchNetlify;
