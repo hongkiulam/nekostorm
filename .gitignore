@@ -3,6 +3,7 @@ build
 web_modules
 node_modules
 inkscape
+TODO.md
 # Local Netlify folder
 .netlify
 # electron out
