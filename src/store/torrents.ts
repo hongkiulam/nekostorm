@@ -37,7 +37,7 @@ const useTorrents = () => {
         searchResult: torrent,
         loading: true,
         added: Date.now(),
-        saveState: defaultSavePath && directSave ? "saved" : "notsaved",
+        saveState: "notsaved",
         pauseState: "running",
       },
     }));
@@ -163,6 +163,24 @@ const useTorrents = () => {
     );
     _updateTorrentById(torrent.id, { pauseState: "resuming" });
   };
+
+  (window as WindowWithContextBridge).wt.subscribeDirectSave((id, err) => {
+    console.log("direct saved", id);
+    const torrentName = get(torrents)[id].searchResult.name;
+    if (err) {
+      return toasts.add({
+        label: `Failed to save torrent file (direct) [${torrentName}] - ${err}`,
+        kind: "danger",
+      });
+    }
+    _updateTorrentById(id, {
+      saveState: "saved",
+    });
+    toasts.add({
+      label: `Successfully saved torrent file (direct) [${torrentName}]`,
+      kind: "success",
+    });
+  });
 
   torrents.subscribe((t) => {
     // only save searchResult obj containing id and magnet etc...

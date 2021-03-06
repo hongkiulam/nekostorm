@@ -123,6 +123,9 @@ contextBridge.exposeInMainWorld("wt", {
   requestSavePath: () => {
     return ipcRenderer.sendSync("client>main:wt-request-save-path");
   },
+  subscribeDirectSave: (listener) => {
+    directSaveListener = listener;
+  },
 });
 
 const progressListeners = [];
@@ -131,4 +134,13 @@ ipcRenderer.on("webtorrent>client:wt-progress", (event, torrentIdMap) => {
   progressListeners.forEach((listener) => {
     listener(torrentIdMap);
   });
+});
+
+/**
+ * Listen for direct save events
+ */
+let directSaveListener = () => {};
+ipcRenderer.on("main>client:wt-direct-save", (event, torrentKey, err) => {
+  console.log("[wt-direct-save]", torrentKey);
+  directSaveListener(torrentKey, err);
 });

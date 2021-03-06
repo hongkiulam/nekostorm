@@ -1,9 +1,9 @@
 console.log("webtorrent preload loaded");
-// coptied from https://stackoverflow.com/a/59796326
-const os = require("os");
+// copied from https://stackoverflow.com/a/59796326
 const path = require("path");
 const { ipcRenderer } = require("electron");
 const WT = require("webtorrent");
+const { TMP_PATH } = require("../constants");
 
 const wtClient = new WT();
 
@@ -17,18 +17,27 @@ wtClient.on("error", (err) => {
 const findTorrentFromId = (torrentKey) =>
   wtClient.torrents.find((torrent) => torrent.key === torrentKey);
 
+const directSave = (torrent) => {
+  const defaultSavePath = localStorage.getItem("nekostorm-savepath");
+  const directSave = JSON.parse(localStorage.getItem("nekostorm-directsave"));
+  if (directSave) {
+    console.log("[wt-direct-save]", torrent.key);
+    ipcRenderer.send(
+      "webtorrent>main:wt-direct-save",
+      torrent.path,
+      defaultSavePath,
+      torrent.key
+    );
+  }
+};
 /**
  * Add
  */
 ipcRenderer.on("client>webtorrent:wt-add", (event, magnet, torrentKey) => {
   console.log("[wt-add]", magnet, torrentKey);
-  const tmpPath = path.join(os.tmpdir(), "nekostorm");
-  const defaultSavePath = localStorage.getItem("nekostorm-savepath");
-  const directSave = JSON.parse(localStorage.getItem("nekostorm-directsave"));
-  const pathToSave = directSave && defaultSavePath ? defaultSavePath : tmpPath;
   const torrent = wtClient.add(
     magnet,
-    { path: path.join(pathToSave, torrentKey.toString()) },
+    { path: path.join(TMP_PATH, torrentKey.toString()) },
     (torrent) => {
       // just need to notify of when metadata loaded, the rest will be handled with
       // setInterval below
@@ -36,6 +45,9 @@ ipcRenderer.on("client>webtorrent:wt-add", (event, magnet, torrentKey) => {
     }
   );
   torrent.key = torrentKey;
+  torrent.on("done", () => {
+    directSave(torrent);
+  });
 });
 
 /**
@@ -102,7 +114,6 @@ ipcRenderer.on("client>webtorrent:wt-remove", (event, torrentKey) => {
 ipcRenderer.on("client>webtorrent:wt-save", (event, torrentKey) => {
   const foundTorrent = findTorrentFromId(torrentKey);
   const defaultSavePath = localStorage.getItem("nekostorm-savepath") || "";
-  console.log("[wt-save] ", foundTorrent.path, foundTorrent.name);
   if (!foundTorrent) {
     return ipcRenderer.send(
       "webtorrent>client:wt-save",
@@ -113,7 +124,6 @@ ipcRenderer.on("client>webtorrent:wt-save", (event, torrentKey) => {
   ipcRenderer.send(
     "webtorrent>main:wt-save",
     foundTorrent.path,
-    foundTorrent.name,
     torrentKey,
     defaultSavePath
   );
@@ -132,14 +142,10 @@ ipcRenderer.on("client>webtorrent:wt-pause", (event, magnet, torrentKey) => {
 
 ipcRenderer.on("client>webtorrent:wt-resume", (event, magnet, torrentKey) => {
   console.log("[wt-resume]", torrentKey, magnet);
-  const tmpPath = path.join(os.tmpdir(), "nekostorm");
-  const defaultSavePath = localStorage.getItem("nekostorm-savepath");
-  const directSave = JSON.parse(localStorage.getItem("nekostorm-directsave"));
-  const pathToSave = directSave && defaultSavePath ? defaultSavePath : tmpPath;
   // re-add torrent to same path to resume
   const torrent = wtClient.add(
     magnet,
-    { path: path.join(pathToSave, torrentKey.toString()) },
+    { path: path.join(TMP_PATH, torrentKey.toString()) },
     (torrent) => {
       ipcRenderer.send("webtorrent>client:wt-resume", torrentKey);
     }
@@ -163,6 +169,7 @@ ipcRenderer.on("client>webtorrent:wt-resume", (event, magnet, torrentKey) => {
   });
   torrent.on("done", () => {
     console.log("[wt-resume] done");
+    directSave(torrent);
   });
 });
 

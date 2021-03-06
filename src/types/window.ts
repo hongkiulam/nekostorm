@@ -24,7 +24,9 @@ export type WindowWithContextBridge = Window &
         response: (err: string) => void
       ) => void;
       requestSavePath: () => string | undefined;
-      // requestSavePath: (response: (savePath: string) => void) => void;
+      subscribeDirectSave: (
+        listener: (torrentKey: number, err: string) => void
+      ) => void;
     };
     "wt-localStorage": {
       setItem: Storage["setItem"];

@@ -71,6 +71,7 @@ app.on("activate", () => {
 // code. You can also put them in separate files and import them here.
 const { ipcMain } = require("electron");
 const api = require("../../../server/_api");
+const { TMP_PATH } = require("../constants");
 
 ipcMain.on("client>main:neko", (event, args) => {
   api(args)
@@ -126,7 +127,6 @@ webTorrentToClientEvents.forEach((e) => {
 ipcMain.on("webtorrent>main:remove-file", (event, path, torrentKey) => {
   rimraf(path, (err) => {
     if (err) {
-      // we setup webtorrent>client:wt-remove event so we will just reuse it
       return client.send("main>client:wt-remove", torrentKey, err.message);
     }
     client.send("main>client:wt-remove", torrentKey);
@@ -135,42 +135,29 @@ ipcMain.on("webtorrent>main:remove-file", (event, path, torrentKey) => {
 
 ipcMain.on(
   "webtorrent>main:wt-save",
-  (event, tmpPath, name, torrentKey, defaultSavePath = "") => {
-    const saveFlow = (defaultPath) => {
-      const newPath = dialog.showSaveDialogSync({
-        title: "Save Torrent",
-        defaultPath,
-      });
-
-      if (newPath) {
-        if (fs.existsSync(newPath)) {
-          const fileExistsResponse = dialog.showMessageBoxSync({
-            message:
-              "File already exists, do you want to replace the existing file?",
-            buttons: ["No", "Yes"],
-          });
-          if (fileExistsResponse === 0) {
-            return saveFlow(newPath);
-          }
-        }
-        // move torrent from tmp to their desired location
-        fse
-          .move(path.join(tmpPath, name), newPath, { overwrite: true })
-          .then((err) => {
-            if (err) {
-              console.error(err);
-              client.send("main>client:wt-save", torrentKey, err.message);
-            }
-            client.send("main>client:wt-save", torrentKey);
-          })
-          .catch((err) => {
-            client.send("main>client:wt-save", torrentKey, err.message);
-          });
-      } else {
-        client.send("main>client:wt-save", torrentKey, "cancelled");
-      }
-    };
-    saveFlow(path.join(defaultSavePath, name));
+  (event, currentPath, torrentKey, defaultSavePath = "") => {
+    const filePaths = dialog.showOpenDialogSync({
+      title: "Select folder to save torrent files",
+      defaultPath: defaultSavePath,
+      properties: ["openDirectory"],
+    });
+    let newPath;
+    if (filePaths && filePaths.length > 0) {
+      newPath = filePaths[0];
+    }
+    if (newPath) {
+      fse
+        .copy(currentPath, newPath)
+        .then(() => {
+          client.send("main>client:wt-save", torrentKey);
+          rimraf(currentPath, () => {});
+        })
+        .catch((err) => {
+          client.send("main>client:wt-save", torrentKey, err.message);
+        });
+    } else {
+      client.send("main>client:wt-save", torrentKey, "cancelled");
+    }
   }
 );
 
@@ -184,3 +171,20 @@ ipcMain.on("client>main:wt-request-save-path", (event) => {
     event.returnValue = undefined;
   }
 });
+
+ipcMain.on(
+  "webtorrent>main:wt-direct-save",
+  (event, currentPath, newPath, torrentKey) => {
+    fse
+      .copy(currentPath, newPath)
+      .then(() => {
+        // success!
+        client.send("main>client:wt-direct-save", torrentKey);
+        rimraf(currentPath, () => {});
+      })
+      .catch((err) => {
+        // error!
+        client.send("main>client:wt-direct-save", torrentKey, err.message);
+      });
+  }
+);
