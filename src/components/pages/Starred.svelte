@@ -4,6 +4,7 @@
   import StarredCard from "../molecules/StarredCard.svelte";
   import MainLayout from "../templates/MainLayout.svelte";
   import { savedSearches } from "../../store/savedSearches";
+  import { badgeCount } from "../../store/badgeCount";
   import { objToQueryString } from "../../helpers/query";
   let recalculate = () => {};
 
@@ -13,6 +14,9 @@
   onDestroy(() => {
     clearInterval(refreshLayout);
   });
+
+  // reset badge count as we are viewing starred searches
+  badgeCount.reset("savedSearches");
 </script>
 
 <style lang="scss">

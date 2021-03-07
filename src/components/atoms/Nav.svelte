@@ -9,8 +9,10 @@
   import active from "svelte-spa-router/active";
   import { location, querystring, push } from "svelte-spa-router";
   import tippy from "sveltejs-tippy";
+  import Badge from "./Badge.svelte";
 
   import { size } from "../../helpers/constants";
+  import { badgeCount } from "../../store/badgeCount";
 
   const searchRegexp = /(\/\?.*)|(\/)$/g;
   $: path = $location + "?" + $querystring;
@@ -58,22 +60,26 @@
         placement: "right",
       }}><SearchIcon size={size.u2} /></button
     >
-    <button
-      on:click={navigate("/starred")}
-      use:active={{ path: "/starred" }}
-      use:tippy={{
-        content: "Saved Searches (Starred)",
-        placement: "right",
-      }}><StarIcon size={size.u2} /></button
-    >
-    <button
-      on:click={navigate("/torrents")}
-      use:active={{ path: "/torrents" }}
-      use:tippy={{
-        content: "Torrents",
-        placement: "right",
-      }}><DownloadCloudIcon size={size.u2} /></button
-    >
+    <Badge count={$badgeCount.savedSearches}>
+      <button
+        on:click={navigate("/starred")}
+        use:active={{ path: "/starred" }}
+        use:tippy={{
+          content: "Saved Searches (Starred)",
+          placement: "right",
+        }}><StarIcon size={size.u2} /></button
+      >
+    </Badge>
+    <Badge count={$badgeCount.torrents}>
+      <button
+        on:click={navigate("/torrents")}
+        use:active={{ path: "/torrents" }}
+        use:tippy={{
+          content: "Torrents",
+          placement: "right",
+        }}><DownloadCloudIcon size={size.u2} /></button
+      >
+    </Badge>
     <button
       class="disabled"
       use:active={{ path: "/torrents/*" }}

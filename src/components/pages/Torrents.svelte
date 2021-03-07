@@ -5,6 +5,7 @@
   import MainLayout from "../templates/MainLayout.svelte";
   import type { TorrentInstance } from "../../types/torrent";
   import { torrents } from "../../store/torrents";
+  import { badgeCount } from "../../store/badgeCount";
   import { isElectron } from "../../helpers/isElectron";
 
   let recalculate = () => {};
@@ -15,6 +16,8 @@
   onDestroy(() => {
     clearInterval(refreshLayout);
   });
+
+  badgeCount.reset("torrents");
 
   $: _torrents = Object.values($torrents).sort(
     (a, b) => a.added - b.added
