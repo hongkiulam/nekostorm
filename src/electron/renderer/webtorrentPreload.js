@@ -1,6 +1,7 @@
 console.log("webtorrent preload loaded");
 // copied from https://stackoverflow.com/a/59796326
 const path = require("path");
+const fs = require("fs");
 const { ipcRenderer } = require("electron");
 const WT = require("webtorrent");
 const { TMP_PATH } = require("../constants");
@@ -93,19 +94,27 @@ setInterval(() => {
 ipcRenderer.on("client>webtorrent:wt-remove", (event, torrentKey) => {
   const foundTorrent = findTorrentFromId(torrentKey);
   console.log("[wt-remove]", torrentKey, foundTorrent);
-  if (!foundTorrent) {
-    return ipcRenderer.send(
-      "webtorrent>client:wt-remove",
-      torrentKey,
-      "Could not find torrent to remove"
+
+  if (foundTorrent) {
+    wtClient.remove(foundTorrent.infoHash);
+    ipcRenderer.send(
+      "webtorrent>main:remove-file",
+      foundTorrent.path,
+      torrentKey
     );
+  } else {
+    const pathToRemove = path.join(TMP_PATH, torrentKey.toString());
+    const torrentFolderExists = fs.existsSync(pathToRemove);
+    if (torrentFolderExists) {
+      ipcRenderer.send("webtorrent>main:remove-file", pathToRemove, torrentKey);
+    } else {
+      ipcRenderer.send(
+        "webtorrent>client:wt-remove",
+        torrentKey,
+        "Could not find torrent to remove"
+      );
+    }
   }
-  wtClient.remove(foundTorrent.infoHash);
-  ipcRenderer.send(
-    "webtorrent>main:remove-file",
-    foundTorrent.path,
-    torrentKey
-  );
 });
 
 /**

@@ -54,7 +54,7 @@ const useTorrents = () => {
     _updateTorrentById(torrent.id, { loading: true });
     if (isElectron()) {
       (window as WindowWithContextBridge).wt.remove(torrent.id, (err) => {
-        if (!err || removed.pauseState === "paused") {
+        if (!err) {
           torrents.update(() => rest);
           toasts.add({
             label: `Torrent removed ${torrent.name}`,
@@ -116,30 +116,6 @@ const useTorrents = () => {
   };
 
   const resume = (torrent: APITorrent) => {
-    const timeoutErrors = [
-      window.setTimeout(() => {
-        toasts.add({
-          label:
-            "Failed to resume torrent - could not resume torrent within 5 seconds",
-          kind: "danger",
-        });
-      }, 5000),
-      window.setTimeout(() => {
-        toasts.add({
-          label:
-            "Failed to resume torrent - could not resume torrent within 20 seconds",
-          kind: "danger",
-        });
-      }, 20000),
-      window.setTimeout(() => {
-        toasts.add({
-          label:
-            "Failed to resume torrent - could not resume torrent within 30 seconds, cancelling resume...",
-          kind: "danger",
-        });
-        pause(torrent);
-      }, 30000),
-    ];
     (window as WindowWithContextBridge).wt.resume(
       torrent.magnet,
       torrent.id,
@@ -158,6 +134,39 @@ const useTorrents = () => {
       }
     );
     _updateTorrentById(torrent.id, { pauseState: "resuming" });
+
+    const clearTimeoutIfTorrentUndefined = () => {
+      if (!get(torrents)[torrent.id]) {
+        return timeoutErrors.forEach(window.clearTimeout);
+      }
+    };
+    const timeoutErrors = [
+      window.setTimeout(() => {
+        clearTimeoutIfTorrentUndefined();
+        toasts.add({
+          label:
+            "Failed to resume torrent - could not resume torrent within 5 seconds",
+          kind: "danger",
+        });
+      }, 5000),
+      window.setTimeout(() => {
+        clearTimeoutIfTorrentUndefined();
+        toasts.add({
+          label:
+            "Failed to resume torrent - could not resume torrent within 20 seconds",
+          kind: "danger",
+        });
+      }, 20000),
+      window.setTimeout(() => {
+        clearTimeoutIfTorrentUndefined();
+        toasts.add({
+          label:
+            "Failed to resume torrent - could not resume torrent within 30 seconds, cancelling resume...",
+          kind: "danger",
+        });
+        pause(torrent);
+      }, 30000),
+    ];
   };
 
   (window as WindowWithContextBridge).wt.subscribeDirectSave((id, err) => {
