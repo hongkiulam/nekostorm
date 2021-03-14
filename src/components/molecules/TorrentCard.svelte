@@ -4,10 +4,7 @@
     ArrowDownIcon,
     ArrowUpIcon,
     ClockIcon,
-    PauseIcon,
     PercentIcon,
-    PlayIcon,
-    SaveIcon,
     UserIcon,
   } from "svelte-feather-icons/src";
   import { Diamonds } from "svelte-loading-spinners";
@@ -16,18 +13,14 @@
   import Card from "../atoms/Card.svelte";
 
   import { webtorrents } from "../../store/webtorrents";
-  import { torrents } from "../../store/torrents";
-  import { prettyBytes, formatTime } from "../../helpers/format";
+  import { prettyBytes, formatTime, NaNGuard } from "../../helpers/format";
   import type { TorrentInstance } from "../../types/torrent";
   import { size } from "../../helpers/constants";
-  import Button from "../atoms/Button.svelte";
+  import { removeTorrent } from "../../helpers/torrent";
+  import TorrentSaveButton from "./TorrentSaveButton.svelte";
+  import TorrentPauseButton from "./TorrentPauseButton.svelte";
 
   export let torrent: TorrentInstance;
-
-  const NaNGuard = (num: number) => {
-    // useful when value is derived from division as x/0 or x/undefined is NaN
-    return isNaN(num) ? 0 : num;
-  };
 
   $: webtorrent = $webtorrents[torrent.searchResult.id] || {};
 
@@ -40,17 +33,6 @@
   $: percentComplete = NaNGuard(
     Number(((downloaded / length) * 100)?.toFixed(0))
   );
-
-  const removeTorrent = () => {
-    const remove = confirm(
-      torrent.saveState === "saved"
-        ? "Are you sure you want to remove this torrent? Saved data will not be removed"
-        : "This action will remove the downloaded files, do you want to continue?"
-    );
-    if (remove) {
-      torrents.remove(torrent.searchResult);
-    }
-  };
 </script>
 
 <style lang="scss">
@@ -76,7 +58,9 @@
   on:click={() => {
     push("/torrents/" + torrent.searchResult.id);
   }}
-  on:delete={removeTorrent}
+  on:delete={() => {
+    removeTorrent(torrent);
+  }}
   color={webtorrent.done
     ? "success"
     : torrent.pauseState === "paused"
@@ -115,44 +99,8 @@
       ><UserIcon size={size.u2} />{numPeers}</span
     >
     <div class="info full-span actions">
-      <Button
-        color={webtorrent.done ? "copy" : "warning"}
-        disabled={webtorrent.done}
-        inverted
-        on:click={(e) => {
-          e.stopPropagation();
-          if (torrent.pauseState === "paused") {
-            torrents.resume(torrent.searchResult);
-          } else if (torrent.pauseState === "running") {
-            torrents.pause(torrent.searchResult);
-          }
-        }}
-        tippyProps={{ content: "Pause/ Resume" }}
-        >{#if torrent.pauseState === "paused"}
-          <PlayIcon size={size.u2} />
-        {:else if torrent.pauseState === "running"}
-          <PauseIcon size={size.u2} />
-        {:else}
-          <Diamonds size={Number(size.u2)} color="var(--warning)" unit="px" />
-        {/if}
-      </Button>
-      <Button
-        color={!webtorrent.done ? "copy" : "success"}
-        disabled={!webtorrent.done || torrent.saveState === "saved"}
-        inverted
-        on:click={(e) => {
-          e.stopPropagation();
-          // save
-          torrents.save(torrent.searchResult.id);
-        }}
-        tippyProps={{ content: "Save" }}
-      >
-        {#if torrent.saveState === "saving"}
-          <Diamonds size={Number(size.u2)} color="var(--success)" unit="px" />
-        {:else}
-          <SaveIcon size={size.u2} />
-        {/if}
-      </Button>
+      <TorrentPauseButton mini torrentId={torrent.searchResult.id} />
+      <TorrentSaveButton mini torrentId={torrent.searchResult.id} />
     </div>
   {/if}
 </Card>

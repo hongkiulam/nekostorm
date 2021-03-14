@@ -1,3 +1,5 @@
+import type { Colors } from "../types/colors";
+
 export const formatFileSize = (sizeInBytes: number) => {
   const units = ["B", "KB", "MB", "GB", "TB"];
   let counter = 0;
@@ -52,4 +54,30 @@ export const formatTime = (timeInSeconds: number) => {
   s = Math.ceil(tIS);
   humanised.push(`${s}s`);
   return humanised[0] + (humanised[1] || "");
+};
+
+export const NaNGuard = (num: number) => {
+  // useful when value is derived from division as x/0 or x/undefined is NaN
+  return isNaN(num) ? 0 : num;
+};
+
+export const formatDate = (isoDate: string) => {
+  return isoDate.slice(0, 10);
+};
+
+export const ratioToHealth = (
+  ratio: number
+): {
+  color: Colors;
+  label: string;
+} => {
+  if (ratio === 0) {
+    return { color: "danger", label: "bad" };
+  } else if (ratio === 1) {
+    return { color: "warning", label: "medium" };
+  } else if (ratio === 2) {
+    return { color: "success", label: "good" };
+  } else {
+    return { color: "success", label: "excellent" };
+  }
 };

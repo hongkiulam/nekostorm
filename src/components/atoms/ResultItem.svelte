@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { formatFileSize } from "../../helpers/format";
+  import { formatDate, formatFileSize } from "../../helpers/format";
   import type { APITorrent } from "../../types/api";
   import { DownloadCloudIcon, CheckIcon } from "svelte-feather-icons/src";
   import tippy from "sveltejs-tippy";
@@ -12,9 +12,7 @@
   $: isDownloaded = torrents.exists(item.id);
 
   const cp = { cellpadding: "0", cellspacing: "0" }; //commonprops
-  const formatDate = (isoDate: string) => {
-    return isoDate.slice(0, 10);
-  };
+
   const download = () => {
     if (isElectron()) {
       if (!isDownloaded) {

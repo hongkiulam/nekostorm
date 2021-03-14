@@ -1,4 +1,3 @@
-import type WebTorrent from "webtorrent";
 import type { APITorrent } from "./api";
 export interface TorrentInstance {
   searchResult: APITorrent;
@@ -12,18 +11,19 @@ export interface Torrent {
 }
 
 export interface WebTorrentIdMap {
-  [key: number]: {
-    downloadSpeed: number;
-    uploadSpeed: number;
-    downloaded: number;
-    numPeers: number;
-    files: {
-      done: boolean;
-      length: number;
-      name: string;
-    };
-    length: number;
+  [key: number]: WebTorrent;
+}
+export interface WebTorrent {
+  downloadSpeed: number;
+  uploadSpeed: number;
+  downloaded: number;
+  numPeers: number;
+  files: {
     done: boolean;
-    timeRemaining: number;
-  };
+    length: number;
+    name: string;
+  }[];
+  length: number;
+  done: boolean;
+  timeRemaining: number;
 }
