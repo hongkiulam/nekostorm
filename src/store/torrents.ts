@@ -9,9 +9,9 @@ const torrentStorageKey = "nekostorm-torrents";
 
 const useTorrents = () => {
   const torrents = writable<Torrent>({});
-  const torrentsFromStorage: APITorrent[] = JSON.parse(
-    localStorage.getItem(torrentStorageKey) || "[]"
-  );
+  // const torrentsFromStorage: APITorrent[] = JSON.parse(
+  //   localStorage.getItem(torrentStorageKey) || "[]"
+  // );
 
   const _updateTorrentById = (
     torrentId: number,
@@ -169,23 +169,25 @@ const useTorrents = () => {
     ];
   };
 
-  (window as WindowWithContextBridge).wt.subscribeDirectSave((id, err) => {
-    console.log("direct saved", id);
-    const torrentName = get(torrents)[id].searchResult.name;
-    if (err) {
-      return toasts.add({
-        label: `Failed to save torrent file (direct) [${torrentName}] - ${err}`,
-        kind: "danger",
+  if (isElectron()) {
+    (window as WindowWithContextBridge).wt.subscribeDirectSave((id, err) => {
+      console.log("direct saved", id);
+      const torrentName = get(torrents)[id].searchResult.name;
+      if (err) {
+        return toasts.add({
+          label: `Failed to save torrent file (direct) [${torrentName}] - ${err}`,
+          kind: "danger",
+        });
+      }
+      _updateTorrentById(id, {
+        saveState: "saved",
       });
-    }
-    _updateTorrentById(id, {
-      saveState: "saved",
+      toasts.add({
+        label: `Successfully saved torrent file (direct) [${torrentName}]`,
+        kind: "success",
+      });
     });
-    toasts.add({
-      label: `Successfully saved torrent file (direct) [${torrentName}]`,
-      kind: "success",
-    });
-  });
+  }
 
   torrents.subscribe((t) => {
     // only save searchResult obj containing id and magnet etc...
@@ -194,9 +196,9 @@ const useTorrents = () => {
     console.log("TorrentsUpdated", savedTorrents);
   });
 
-  torrentsFromStorage.forEach((torrent) => {
-    add(torrent);
-  });
+  // torrentsFromStorage.forEach((torrent) => {
+  //   add(torrent);
+  // });
 
   return {
     ...torrents,
