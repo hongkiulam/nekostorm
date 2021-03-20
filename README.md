@@ -24,7 +24,9 @@ _Built with Svelte, Typescript, Scss, Snowpack, WebTorrent, Electron_
 
 You can download Nekostorm [here](https://github.com/hongkiulam/nekostorm/releases), find the desired release and download the binary files or source code from the Assets section.
 
-> All anime available through Nekostorm are hosted on servers and databases externally, they are pulled in via external APIs and scrapers i.e. AnimeTosho, Nyaa.net and Nyaa.si. Any content downloaded with this app is the sole responsibility of the user, the developer makes no liabilities for infringements commited by a 3rd party.
+> Please note that currently this app is unsigned, thus you may run into issues when trying to install on Mac or Windows. Continuing with the installation should be done at the user's sole risk.
+
+> All content available through Nekostorm are hosted on servers and databases externally, they are pulled in via external APIs and scrapers i.e. AnimeTosho, Nyaa.net and Nyaa.si. Any content downloaded/ watched with this app is the sole responsibility of the user, the developer makes no liabilities for infringements committed by a 3rd party.
 
 #### Development
 
