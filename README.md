@@ -12,6 +12,8 @@ The app was migrated to Electron as a result since this boasts full node integra
 
 _Built with Svelte, Typescript, Scss, Snowpack, WebTorrent, Electron_
 
+> _Used [nyaaclient](https://github.com/hongkiulam/nyaaclient) as a starting point._
+
 ---
 
 #### Development
@@ -38,6 +40,17 @@ This will build the packaged apps within the container, to access the files we c
 
 `docker cp containerid:/app/out-eb ./`
 
----
+#### Component Structure
 
-_Used [nyaaclient](https://github.com/hongkiulam/nyaaclient) as a starting point._
+The components in this project are structured based on the [Atomic Design](https://bradfrost.com/blog/post/atomic-web-design/) system.
+
+In short:
+`atoms` - The basic building blocks, on their own they aren't very useful but can be combined and configured into more useful components
+
+`molecules` - Typically a collection of atoms, molecules should aim to do one task and do it well. They can range from being simple to very complex but should still be built with reuse in mind
+
+`organisms` - Groups of atoms and molecules joined to form a notable section of the page, at this level they should be slottable into pages and still function on its own
+
+`templates` - A component used to stitch other components together to form the basis of a page
+
+`pages` - Usually an instance of a template, this is the highest level of fidelity and should be quite self explantory
