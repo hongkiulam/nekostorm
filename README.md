@@ -1,20 +1,30 @@
-# NekoStorm
+<p align='center'>
+  <img src='/public/img/logo.svg' height='100px'/>
+</p>
+<h3 align='center'>
+  Nekostorm
+</h3>
+<p align='center'>
+  <strong>Anime-torrent search and torrenting application</strong>
+</p>
 
-##### Anime-torrent search and torrenting application
+---
 
 Uses [AnimeTosho](https://animetosho.org/), [Nyaa Pantsu API](https://nyaa.net/apidoc) and [Nyaapi](https://github.com/Kylart/Nyaapi) to search for torrents.
 
-~~[WebTorrent](https://webtorrent.io/) for client-side torrenting~~
-
-Client-side torrenting did not work as expected, mostly due to me not reading the docs properly. Most torrents failed to find peers as it turns out they must also be seeding via WebRTC.
-
-The app was migrated to Electron as a result since this boasts full node integration.
+Downloads torrents with [WebTorrent](https://webtorrent.io/).
 
 _Built with Svelte, Typescript, Scss, Snowpack, WebTorrent, Electron_
 
 > _Used [nyaaclient](https://github.com/hongkiulam/nyaaclient) as a starting point._
 
 ---
+
+#### Download
+
+You can download Nekostorm [here](https://github.com/hongkiulam/nekostorm/releases), find the desired release and download the binary files or source code from the Assets section.
+
+> All anime available through Nekostorm are not hosted by me, they are pulled in via external APIs and scrapers i.e. AnimeTosho, Nyaa.net and Nyaa.si. By watching anime with this application you might be committing copyright violations depending on your country's laws. I do not take any responsibility.
 
 #### Development
 
@@ -45,6 +55,7 @@ This will build the packaged apps within the container, to access the files we c
 The components in this project are structured based on the [Atomic Design](https://bradfrost.com/blog/post/atomic-web-design/) system.
 
 In short:
+
 `atoms` - The basic building blocks, on their own they aren't very useful but can be combined and configured into more useful components
 
 `molecules` - Typically a collection of atoms, molecules should aim to do one task and do it well. They can range from being simple to very complex but should still be built with reuse in mind
