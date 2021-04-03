@@ -82,9 +82,22 @@
       inverted
       disabled={isDefaultFilter}
       on:click={() => {
+        const defaultFilter = defaults.filter.get();
+        source = defaultFilter.source || source;
+        user = defaultFilter.user || user;
+        sort = defaultFilter.sort || sort;
+        order = defaultFilter.order || order;
+        show = defaultFilter.show || show;
+      }}>Use default</Button
+    >
+    <Button
+      color="primary-light"
+      inverted
+      disabled={isDefaultFilter}
+      on:click={() => {
         defaults.filter.set(filterObj);
         isDefaultFilter = true;
-      }}>Set as default filter</Button
+      }}>Set default</Button
     >
     <Button
       color="warning"
