@@ -36,7 +36,7 @@
     <article>
       <TorrentDetailButtons {torrentId} />
       <TorrentDetailOverview {torrentId} />
-      <!-- <TorrentDetailGraphs /> -->
+      <TorrentDetailGraphs {torrentId} />
     </article>
   </MainLayout>
 {/if}
