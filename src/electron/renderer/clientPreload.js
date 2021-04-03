@@ -76,8 +76,7 @@ contextBridge.exposeInMainWorld("wt", {
     ipcRenderer.on("main>client:wt-remove", responseListener);
   },
   progress: (listener) => {
-    progressListeners.push(listener);
-    return progressListeners.filter((l) => l !== listener);
+    progressListener = listener;
   },
   save: (id, response) => {
     ipcRenderer.send("client>webtorrent:wt-save", id);
@@ -128,12 +127,9 @@ contextBridge.exposeInMainWorld("wt", {
   },
 });
 
-const progressListeners = [];
-
+let progressListener = () => {};
 ipcRenderer.on("webtorrent>client:wt-progress", (event, torrentIdMap) => {
-  progressListeners.forEach((listener) => {
-    listener(torrentIdMap);
-  });
+  progressListener(torrentIdMap);
 });
 
 /**
