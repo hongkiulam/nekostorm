@@ -15,6 +15,8 @@ const init = () => {
     },
   });
 
+  win.setMenuBarVisibility(false);
+  
   if (isDev) {
     // and load the snowpack dev url
     win.loadURL("http://localhost:8080");
