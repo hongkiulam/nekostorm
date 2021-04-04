@@ -1,7 +1,7 @@
 <script lang="ts">
   import { querystring } from "svelte-spa-router";
   import ResultsTable from "../molecules/ResultsTable.svelte";
-  import ResultPaginator from "../atoms/ResultPaginator.svelte";
+  import ResultPaginator from "../molecules/ResultPaginator.svelte";
   import Search from "../molecules/Search.svelte";
   import MainLayout from "../templates/MainLayout.svelte";
   import FilterModal from "../molecules/FilterModal.svelte";

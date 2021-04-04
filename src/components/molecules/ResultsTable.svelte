@@ -7,7 +7,7 @@
   import type { APITorrent } from "../../types/api";
 
   import { parsedQueryString, searchResults } from "../../store/basic";
-  import ResultItem from "../atoms/ResultItem.svelte";
+  import ResultItem from "./ResultItem.svelte";
 
   let loading = false;
 

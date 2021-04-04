@@ -9,7 +9,7 @@
   import active from "svelte-spa-router/active";
   import { location, querystring, push } from "svelte-spa-router";
   import tippy from "sveltejs-tippy";
-  import Badge from "./Badge.svelte";
+  import Badge from "../atoms/Badge.svelte";
 
   import { size } from "../../helpers/constants";
   import { badgeCount } from "../../store/badgeCount";

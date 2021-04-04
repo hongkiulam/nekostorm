@@ -1,6 +1,6 @@
 <script>
   import { ChevronLeftIcon, ChevronRightIcon } from "svelte-feather-icons/src";
-  import Button from "./Button.svelte";
+  import Button from "../atoms/Button.svelte";
   import { size } from "../../helpers/constants";
   import { updateQuery } from "../../helpers/query";
 
