@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { size } from "../../helpers/constants";
-  import { XIcon } from "svelte-feather-icons/src";
-  import { createEventDispatcher } from "svelte";
+  import { size } from '../../helpers/constants';
+  import { portal } from '../../helpers/portal';
+  import { XIcon } from 'svelte-feather-icons/src';
+  import { createEventDispatcher } from 'svelte';
 
   export let open = false;
   export let title: string;
@@ -9,11 +10,14 @@
   const dispatch = createEventDispatcher();
   const closeModal = () => {
     open = false;
-    dispatch("close");
+    dispatch('close');
   };
 </script>
 
 <style lang="scss">
+  .modal {
+    display: contents;
+  }
   dialog {
     position: fixed;
     left: 50%;
@@ -61,16 +65,18 @@
 </style>
 
 {#if open}
-  <div class="backdrop" on:click|stopPropagation={closeModal} />
-  <dialog open>
-    <div class="modal-content">
-      {#if title}
-        <h2>{title || ""}</h2>
-      {/if}
-      <slot />
-      <button class="close-icon" on:click={closeModal}>
-        <XIcon size={size.u2} />
-      </button>
-    </div>
-  </dialog>
+  <div class="modal" use:portal={'#modal-root'}>
+    <div class="backdrop" on:click|stopPropagation={closeModal} />
+    <dialog open>
+      <div class="modal-content">
+        {#if title}
+          <h2>{title || ''}</h2>
+        {/if}
+        <slot />
+        <button class="close-icon" on:click={closeModal}>
+          <XIcon size={size.u2} />
+        </button>
+      </div>
+    </dialog>
+  </div>
 {/if}
