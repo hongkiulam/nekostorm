@@ -98,6 +98,7 @@ const clientToWebTorrentEvents = [
   "wt-resume",
   "wt-localStorage-getItem",
   "wt-localStorage-setItem",
+  "stream-start",
 ];
 const webTorrentToClientEvents = [
   "wt-metadata",
@@ -107,6 +108,7 @@ const webTorrentToClientEvents = [
   "wt-pause",
   "wt-resume",
   "wt-localStorage-getItem",
+  "stream-start",
 ];
 
 clientToWebTorrentEvents.forEach((e) => {

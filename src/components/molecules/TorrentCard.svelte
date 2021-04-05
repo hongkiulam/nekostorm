@@ -19,6 +19,7 @@
   import { removeTorrent } from "../../helpers/torrent";
   import TorrentSaveButton from "./TorrentSaveButton.svelte";
   import TorrentPauseButton from "./TorrentPauseButton.svelte";
+  import TorrentStreamButton from './TorrentStreamButton.svelte';
 
   export let torrent: TorrentInstance;
 
@@ -101,6 +102,7 @@
     <div class="info full-span actions">
       <TorrentPauseButton mini torrentId={torrent.searchResult.id} />
       <TorrentSaveButton mini torrentId={torrent.searchResult.id} />
+      <TorrentStreamButton mini torrentId={torrent.searchResult.id} />
     </div>
   {/if}
 </Card>

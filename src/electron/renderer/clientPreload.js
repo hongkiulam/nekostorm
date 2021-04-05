@@ -125,6 +125,17 @@ contextBridge.exposeInMainWorld("wt", {
   subscribeDirectSave: (listener) => {
     directSaveListener = listener;
   },
+  stream: (torrentId, fileIndex, response) => {
+    ipcRenderer.send('client>webtorrent:stream-start', torrentId, fileIndex);
+
+    const responseListener = (event, torrentKey, url) => {
+      if (torrentId === torrentKey) {
+        response(url);
+        ipcRenderer.removeListener('webtorrent>client:stream-start', responseListener);
+      }
+    }
+    ipcRenderer.on('webtorrent>client:stream-start', responseListener);
+  }
 });
 
 let progressListener = () => {};

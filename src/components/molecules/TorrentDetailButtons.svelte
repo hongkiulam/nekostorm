@@ -1,9 +1,10 @@
 <script lang="ts">
-  import Button from "../atoms/Button.svelte";
-  import TorrentSaveButton from "./TorrentSaveButton.svelte";
-  import TorrentPauseButton from "./TorrentPauseButton.svelte";
-  import { removeTorrent } from "../../helpers/torrent";
-  import { torrents } from "../../store/torrents";
+  import Button from '../atoms/Button.svelte';
+  import TorrentSaveButton from './TorrentSaveButton.svelte';
+  import TorrentPauseButton from './TorrentPauseButton.svelte';
+  import TorrentStreamButton from './TorrentStreamButton.svelte';
+  import { removeTorrent } from '../../helpers/torrent';
+  import { torrents } from '../../store/torrents';
 
   export let torrentId: number;
 
@@ -27,5 +28,5 @@
       removeTorrent(torrent);
     }}>Remove</Button
   >
-  <Button disabled color="copy-primary">Get Stream URL</Button>
+  <TorrentStreamButton {torrentId} />
 </div>

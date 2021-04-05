@@ -1,6 +1,6 @@
-import type { APITorrent } from "./api";
-import type { QueryObject } from "./query";
-import type { WebTorrentIdMap } from "./torrent";
+import type { APITorrent } from './api';
+import type { QueryObject } from './query';
+import type { WebTorrentIdMap } from './torrent';
 
 export type WindowWithContextBridge = Window &
   typeof globalThis & {
@@ -27,9 +27,14 @@ export type WindowWithContextBridge = Window &
       subscribeDirectSave: (
         listener: (torrentKey: number, err: string) => void
       ) => void;
+      stream: (
+        id: number,
+        fileIndex: number,
+        response: (streamUrl: string) => void
+      ) => void;
     };
-    "wt-localStorage": {
-      setItem: Storage["setItem"];
+    'wt-localStorage': {
+      setItem: Storage['setItem'];
       getItem: (key: string, received: (value: string) => void) => void;
     };
   };

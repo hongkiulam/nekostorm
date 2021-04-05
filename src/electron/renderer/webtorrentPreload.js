@@ -200,3 +200,36 @@ ipcRenderer.on(
     localStorage.setItem(...args);
   }
 );
+
+/**
+ * Video Streaming
+ */
+ let torrentServers = {};
+ ipcRenderer.on(
+   'client>webtorrent:stream-start',
+   (event, torrentKey, fileIndex) => {
+     if (torrentServers[torrentKey]) {
+       const localUrl = torrentServers[torrentKey].localUrl;
+       const fileUrl = `${localUrl}/${fileIndex}`;
+       ipcRenderer.send('webtorrent>client:stream-start', torrentKey, fileUrl);
+       return;
+     }
+
+     const torrent = findTorrentFromId(torrentKey);
+     /**
+      * SERVER
+      */
+     torrentServers[torrentKey] = {};
+     torrentServers[torrentKey].server = torrent.createServer();
+     torrentServers[torrentKey].server.listen(0, () => {
+       const port = torrentServers[torrentKey].server.address().port;
+       const urlSuffix = ':' + port;
+       const localUrl = 'http://localhost' + urlSuffix;
+       torrentServers[torrentKey].localUrl = localUrl;
+
+       const fileUrl = `${localUrl}/${fileIndex}`;
+       ipcRenderer.send('webtorrent>client:stream-start', torrentKey, fileUrl);
+     });
+   }
+ );
+ 
