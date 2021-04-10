@@ -90,16 +90,18 @@
   }
   .graph_container {
     padding: var(--u);
+    padding-top: var(--u2);
     border: 1px solid var(--primary);
-    padding-left: calc(var(--u2) + 1em);
     position: relative;
   }
 
   .graph_title {
     position: absolute;
-    top: 50%;
-    left: 1em;
-    transform: translate(-50%, -50%) rotate(-90deg);
+    top: 0;
+    left: var(--u);
+    transform: translateY(-50%);
+    padding: 0 var(--u);
+    background: var(--copy-bg)
   }
   .graph_container :global(canvas) {
     width: 100% !important;

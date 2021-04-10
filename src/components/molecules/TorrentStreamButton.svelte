@@ -24,7 +24,7 @@
 </script>
 
 <Button
-  color="copy-primary"
+  color="primary"
   on:click={(e) => {
     e.stopPropagation();
     showStreamFileModal = true;

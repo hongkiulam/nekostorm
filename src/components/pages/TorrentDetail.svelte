@@ -20,6 +20,8 @@
     align-items: center;
   }
   article {
+    overflow: scroll;
+    height: 100%;
     & > :global(* + *) {
       margin-top: var(--u2);
     }
