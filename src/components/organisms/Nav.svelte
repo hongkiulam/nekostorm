@@ -5,6 +5,7 @@
     StarIcon,
     DropletIcon,
     SettingsIcon,
+    ChevronsRightIcon,
   } from "svelte-feather-icons/src";
   import active from "svelte-spa-router/active";
   import { location, querystring, push } from "svelte-spa-router";
@@ -40,13 +41,12 @@
     cursor: pointer;
   }
   .disabled {
-    opacity: 0.5;
-    cursor: auto;
+    display: none;
   }
   :global(a.active, button.active) {
     background: var(--copy-bg);
     color: var(--copy-primary);
-    opacity: 1 !important;
+    display: block !important;
   }
 </style>
 
@@ -87,6 +87,14 @@
         content: "Torrent Detail",
         placement: "right",
       }}><DropletIcon size={size.u2} /></button
+    >
+    <button
+      class='disabled'
+      use:active={{ path: "/stream/*" }}
+      use:tippy={{
+        content: "Stream",
+        placement: "right",
+      }}><ChevronsRightIcon size={size.u2} /></button
     >
   </div>
 

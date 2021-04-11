@@ -216,6 +216,7 @@ ipcRenderer.on(
      }
 
      const torrent = findTorrentFromId(torrentKey);
+     if (!torrent) return ipcRenderer.send('webtorrent>client:stream-start', torrentKey, undefined)
      /**
       * SERVER
       */

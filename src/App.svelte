@@ -7,12 +7,14 @@
   import Starred from './components/pages/Starred.svelte';
   import TorrentDetail from './components/pages/TorrentDetail.svelte';
   import Torrents from './components/pages/Torrents.svelte';
+  import Stream from './components/pages/Stream.svelte';
   const routes = new Map();
   routes.set('/', Search);
   routes.set('/starred', Starred);
   routes.set('/torrents', Torrents);
   routes.set('/torrents/:id?', TorrentDetail);
   routes.set('/settings', Settings);
+  routes.set('/stream/:id', Stream);
 </script>
 
 <style lang="scss">
