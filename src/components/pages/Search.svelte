@@ -1,8 +1,8 @@
 <script lang="ts">
   import { querystring } from "svelte-spa-router";
-  import ResultsTable from "../molecules/ResultsTable.svelte";
+  import ResultsTable from "../organisms/ResultsTable.svelte";
   import ResultPaginator from "../molecules/ResultPaginator.svelte";
-  import Search from "../molecules/Search.svelte";
+  import Search from "../organisms/Search.svelte";
   import MainLayout from "../templates/MainLayout.svelte";
   import FilterModal from "../molecules/FilterModal.svelte";
   import { updateQuery } from "../../helpers/query";
