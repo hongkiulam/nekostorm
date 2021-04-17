@@ -1,12 +1,10 @@
 <script lang="ts">
   import { onDestroy, onMount } from 'svelte';
   import { MpvJs } from 'mpv.js-vanilla';
-  import { PauseIcon, PlayIcon } from 'svelte-feather-icons/src';
+  import { PauseIcon, PlayIcon, MaximizeIcon } from 'svelte-feather-icons/src';
   import Button from '../atoms/Button.svelte';
   import StreamSeeker from '../molecules/StreamSeeker.svelte';
   import { size } from '../../helpers/constants';
-
-  // TODO handle double click?
 
   // Define handler functions
   const handleMPVReady = (mpv: any) => {
@@ -140,5 +138,8 @@
       on:start={handleSeekMouseDown}
       on:stop={handleSeekMouseUp}
     />
+    <Button on:click={toggleFullscreen}>
+      <MaximizeIcon size={size.u2} />
+    </Button>
   </div>
 </div>
