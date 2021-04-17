@@ -2,7 +2,7 @@ import type { APITorrent } from "../types/api";
 import qs from "query-string";
 import { isElectron } from "./isElectron";
 import { toasts } from "../store/toasts";
-import type { WindowWithContextBridge } from "../types/window";
+import { api } from "./ipc";
 import type { QueryObject } from "../types/query";
 const API_URL = "/.netlify/functions/api";
 
@@ -33,7 +33,6 @@ const nekoFetchElectron = async (
 ): Promise<APITorrent[]> => {
   const queryObj = qs.parse(queryString) as QueryObject;
   return new Promise((res, rej) => {
-    const api = (window as WindowWithContextBridge).api;
     api.fetch(queryObj).then((data) => {
       if (data) {
         res(data);

@@ -1,4 +1,4 @@
-import type { WindowWithContextBridge } from "../types/window";
+import { wt } from "./ipc";
 import type { Filters, QueryObject } from "../types/query";
 import wtLocalStorage from "./wtLocalStorage";
 
@@ -52,7 +52,7 @@ const savePath = {
       wtLocalStorage.set(this._key, "");
       return "";
     }
-    const savePath = (window as WindowWithContextBridge).wt.requestSavePath();
+    const savePath = wt.requestSavePath();
     if (savePath) {
       wtLocalStorage.set(this._key, savePath);
     }

@@ -1,9 +1,9 @@
-import type { WebTorrent, WebTorrentIdMap } from "src/types/torrent";
-import type { WindowWithContextBridge } from "src/types/window";
-import { readable, writable } from "svelte/store";
+import type { WebTorrent, WebTorrentIdMap } from 'src/types/torrent';
+import { wt } from '../helpers/ipc';
+import { readable, writable } from 'svelte/store';
 
 export const webtorrents = readable<WebTorrentIdMap>({}, (set) => {
-  (window as WindowWithContextBridge).wt.progress((torrentIdMap) => {
+  wt.progress((torrentIdMap) => {
     set(torrentIdMap);
   });
 });

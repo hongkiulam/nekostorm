@@ -1,19 +1,16 @@
 // helper functions for setting localstorage in webtorrent renderer process
 
-import type { WindowWithContextBridge } from "src/types/window";
+import { wtLocalStorage } from './ipc';
 
 export default {
   set: (key: string, value: string) => {
-    (window as WindowWithContextBridge)["wt-localStorage"].setItem(key, value);
+    wtLocalStorage.setItem(key, value);
   },
   get: (key: string): Promise<string> => {
     return new Promise((res, rej) => {
-      (window as WindowWithContextBridge)["wt-localStorage"].getItem(
-        key,
-        (value) => {
-          res(value);
-        }
-      );
+      wtLocalStorage.getItem(key, (value) => {
+        res(value);
+      });
     });
   },
 };

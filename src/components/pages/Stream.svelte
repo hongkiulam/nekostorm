@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
-
-  import type { WindowWithContextBridge } from '../../types/window';
+  import { wt } from '../../helpers/ipc';
 
   import TorrentFileList from '../organisms/TorrentFileList.svelte';
   import MainLayout from '../templates/MainLayout.svelte';
@@ -14,19 +13,15 @@
 
   $: {
     streamUrlLoading = true;
-    (window as WindowWithContextBridge).wt.stream(
-      torrentId,
-      selectedFileIndex,
-      (url) => {
-        streamUrlLoading = false;
-        streamUrl = url || '';
-      }
-    );
+    wt.stream(torrentId, selectedFileIndex, (url) => {
+      streamUrlLoading = false;
+      streamUrl = url || '';
+    });
   }
 
   onDestroy(() => {
     // kill streaming server when leaving stream page
-    (window as WindowWithContextBridge).wt.killStream();
+    wt.killStream();
   });
 </script>
 
