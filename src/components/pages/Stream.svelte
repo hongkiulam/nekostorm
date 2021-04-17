@@ -2,6 +2,7 @@
   import { onDestroy } from 'svelte';
   import { wt } from '../../helpers/ipc';
 
+  import MPV from '../organisms/MPV.svelte';
   import TorrentFileList from '../organisms/TorrentFileList.svelte';
   import MainLayout from '../templates/MainLayout.svelte';
   export let params: { id: string; fileIndex: string };
@@ -62,7 +63,11 @@
   <article>
     <div class="aspect-ratio">
       <div class="video-placeholder">
-        <span>{streamUrlLoading ? 'Loading...' : streamUrl}</span>
+        {#if streamUrlLoading}
+          <span>Loading...</span>
+        {:else}
+          <MPV {streamUrl} />
+        {/if}
       </div>
     </div>
     <TorrentFileList {torrentId} bind:fileIndex={selectedFileIndex} />

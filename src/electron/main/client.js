@@ -1,5 +1,6 @@
 const { app, BrowserWindow } = require("electron");
 const path = require("path");
+require('./mpv');
 
 let win = null;
 const args = process.argv.slice(2);
@@ -11,7 +12,8 @@ const init = () => {
     height: 600,
     webPreferences: {
       contextIsolation: true,
-      preload: path.join(__dirname, "../renderer/clientPreload.js"), // use a preload script
+      preload: path.join(__dirname, "../renderer/clientPreload.js"), // use a preload script,
+      plugins: true, // for mpv
     },
   });
 

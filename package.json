@@ -27,6 +27,7 @@
     "axios": "^0.21.1",
     "electron-squirrel-startup": "^1.0.0",
     "fs-extra": "^9.1.0",
+    "mpv.js-vanilla": "^0.3.4",
     "nyaapi": "^2.3.3",
     "rimraf": "^3.0.2",
     "svelte": "^3.24.0",

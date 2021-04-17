@@ -67,3 +67,4 @@ declare module "sveltejs-tippy" {
 }
 
 declare module "macy";
+declare module "mpv.js-vanilla";
