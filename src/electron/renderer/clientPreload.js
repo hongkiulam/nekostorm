@@ -135,6 +135,9 @@ contextBridge.exposeInMainWorld("wt", {
       }
     }
     ipcRenderer.on('webtorrent>client:stream-start', responseListener);
+  },
+  killStream: () => {
+    ipcRenderer.send('client>webtorrent:stream-end');
   }
 });
 

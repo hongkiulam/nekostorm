@@ -204,33 +204,72 @@ ipcRenderer.on(
 /**
  * Video Streaming
  */
- let torrentServers = {};
- ipcRenderer.on(
-   'client>webtorrent:stream-start',
-   (event, torrentKey, fileIndex) => {
-     if (torrentServers[torrentKey]) {
-       const localUrl = torrentServers[torrentKey].localUrl;
-       const fileUrl = `${localUrl}/${fileIndex}`;
-       ipcRenderer.send('webtorrent>client:stream-start', torrentKey, fileUrl);
-       return;
-     }
+/**
+ * @type {{
+ * server: import('http').Server,
+ * torrentId: number,
+ * localUrl: string}}
+ */
+let streaming = {
+  torrentId: null,
+  server: null,
+  localUrl: null,
+};
 
-     const torrent = findTorrentFromId(torrentKey);
-     if (!torrent) return ipcRenderer.send('webtorrent>client:stream-start', torrentKey, undefined)
-     /**
-      * SERVER
-      */
-     torrentServers[torrentKey] = {};
-     torrentServers[torrentKey].server = torrent.createServer();
-     torrentServers[torrentKey].server.listen(0, () => {
-       const port = torrentServers[torrentKey].server.address().port;
-       const urlSuffix = ':' + port;
-       const localUrl = 'http://localhost' + urlSuffix;
-       torrentServers[torrentKey].localUrl = localUrl;
+ipcRenderer.on(
+  'client>webtorrent:stream-start',
+  (event, torrentKey, fileIndex) => {
+    // server is already running for chosen torrent
+    if (streaming.torrentId === torrentKey) {
+      const localUrl = streaming.localUrl;
+      const fileUrl = `${localUrl}/${fileIndex}`;
+      ipcRenderer.send('webtorrent>client:stream-start', torrentKey, fileUrl);
+      return;
+    }
 
-       const fileUrl = `${localUrl}/${fileIndex}`;
-       ipcRenderer.send('webtorrent>client:stream-start', torrentKey, fileUrl);
-     });
-   }
- );
- 
+    // start new torrent server
+
+    // first remove old server instance
+    if (streaming.torrentId) {
+      streaming.server.close();
+      streaming = {
+        torrentId: null,
+        server: null,
+        localUrl: null,
+      };
+    }
+    // check torrent exists
+    const torrent = findTorrentFromId(torrentKey);
+    if (!torrent)
+      return ipcRenderer.send(
+        'webtorrent>client:stream-start',
+        torrentKey,
+        undefined
+      );
+
+    // create streaming server
+    streaming.torrentId = torrentKey;
+    streaming.server = torrent.createServer();
+    streaming.server.listen(0, () => {
+      const port = streaming.server.address().port;
+      const urlSuffix = ':' + port;
+      const localUrl = 'http://localhost' + urlSuffix;
+      streaming.localUrl = localUrl;
+
+      const fileUrl = `${localUrl}/${fileIndex}`;
+      ipcRenderer.send('webtorrent>client:stream-start', torrentKey, fileUrl);
+    });
+  }
+);
+
+ipcRenderer.on('client>webtorrent:stream-end', () => {
+  // kill streaming server
+  if (streaming.torrentId) {
+    streaming.server.close();
+    streaming = {
+      torrentId: null,
+      server: null,
+      localUrl: null,
+    };
+  }
+});

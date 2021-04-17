@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { onDestroy } from 'svelte';
+
   import type { WindowWithContextBridge } from '../../types/window';
 
   import TorrentFileList from '../organisms/TorrentFileList.svelte';
@@ -21,6 +23,11 @@
       }
     );
   }
+
+  onDestroy(() => {
+    // kill streaming server when leaving stream page
+    (window as WindowWithContextBridge).wt.killStream();
+  });
 </script>
 
 <style lang="scss">

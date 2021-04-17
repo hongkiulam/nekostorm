@@ -99,6 +99,7 @@ const clientToWebTorrentEvents = [
   "wt-localStorage-getItem",
   "wt-localStorage-setItem",
   "stream-start",
+  "stream-end",
 ];
 const webTorrentToClientEvents = [
   "wt-metadata",

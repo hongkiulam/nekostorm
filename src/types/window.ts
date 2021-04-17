@@ -32,6 +32,7 @@ export type WindowWithContextBridge = Window &
         fileIndex: number,
         response: (streamUrl: string) => void
       ) => void;
+      killStream: () => void;
     };
     'wt-localStorage': {
       setItem: Storage['setItem'];
