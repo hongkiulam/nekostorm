@@ -38,11 +38,13 @@
       grid-auto-flow: row;
     }
   }
+
   .aspect-ratio {
+    --video-control-bar-height: var(--u3);
     position: relative;
     height: auto;
     width: 100%;
-    padding-bottom: 56.25%;
+    padding-bottom: calc(56.25% + var(--video-control-bar-height));
   }
 
   .video-placeholder {

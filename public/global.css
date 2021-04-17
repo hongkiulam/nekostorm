@@ -91,9 +91,6 @@ button:disabled {
   opacity: 0.5;
 }
 
-input[type="range"] {
-  height: 0;
-}
 
 button {
   color: inherit;

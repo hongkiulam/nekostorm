@@ -1,6 +1,12 @@
 <script lang="ts">
   import { onDestroy, onMount } from 'svelte';
   import { MpvJs } from 'mpv.js-vanilla';
+  import { PauseIcon, PlayIcon } from 'svelte-feather-icons/src';
+  import Button from '../atoms/Button.svelte';
+  import StreamSeeker from '../molecules/StreamSeeker.svelte';
+  import { size } from '../../helpers/constants';
+
+  // TODO handle double click?
 
   // Define handler functions
   const handleMPVReady = (mpv: any) => {
@@ -40,27 +46,17 @@
     if (!state.duration) return;
     mpv.property('pause', !state.pause);
   };
-  const handleStop = (e: any) => {
-    e.target.blur();
-    mpv.property('pause', true);
-    mpv.command('stop');
-    state['time-pos'] = 0;
-    state.duration = 0;
-  };
+
   const handleSeekMouseDown = () => {
     seeking = true;
   };
-  const handleSeek = (e: any) => {
-    e.target.blur();
-    const timePos = +e.target.value;
+  const handleSeek = (value: number) => {
+    const timePos = +value;
     state['time-pos'] = timePos;
     mpv.property('time-pos', timePos);
   };
   const handleSeekMouseUp = () => {
     seeking = false;
-  };
-  const handleLoad = (e: any) => {
-    e.target.blur();
   };
 
   // state and other lifecycle things
@@ -81,6 +77,7 @@
 
   $: if (mpvReady && streamUrl) {
     mpv.command('loadfile', streamUrl);
+    state['time-pos'] = 0;
   }
 
   onMount(() => {
@@ -92,6 +89,7 @@
     document.removeEventListener('keydown', handleKeyDown, false);
     mpv.destroy();
   });
+
 </script>
 
 <style>
@@ -100,23 +98,23 @@
     height: 100%;
   }
   .embed {
+    display: block;
     width: 100%;
-    height: calc(100% - 40px);
+    height: calc(100% - var(--video-control-bar-height));
   }
   .controls {
-    height: 40px;
+    height: var(--video-control-bar-height);
     width: 100%;
     display: flex;
+    background-color: var(--primary);
   }
-  .control {
+  .controls :global(button) {
     flex: 0 1;
-  }
-  .seek {
-    flex: 1 1;
+    height: 100%;
   }
 </style>
 
-<figure class="player">
+<div class="player">
   <embed
     bind:this={embed}
     type={embedProps.type}
@@ -124,21 +122,23 @@
     class="embed"
   />
   <div class="controls">
-    <button class="control" on:click={togglePause}>
-      {state.pause ? '▶' : '❚❚'}
-    </button>
-    <button class="control" on:click={handleStop}>■</button>
-    <input
-      class="seek"
-      type="range"
-      min={0}
-      step={0.1}
-      max={state.duration}
+    <Button on:click={togglePause}>
+      {#if state.pause}
+        <PlayIcon size={size.u2} />
+      {:else}
+        <PauseIcon size={size.u2} />
+      {/if}
+    </Button>
+    <StreamSeeker
       value={state['time-pos']}
-      on:change={handleSeek}
-      on:mousedown={handleSeekMouseDown}
-      on:mouseup={handleSeekMouseUp}
+      min={0}
+      max={state.duration}
+      step={0.1}
+      on:change={(e) => {
+        handleSeek(e.detail.value);
+      }}
+      on:start={handleSeekMouseDown}
+      on:stop={handleSeekMouseUp}
     />
-    <button class="control" on:click={handleLoad}>⏏</button>
   </div>
-</figure>
+</div>
