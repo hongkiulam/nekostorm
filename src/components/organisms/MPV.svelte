@@ -1,7 +1,13 @@
 <script lang="ts">
   import { onDestroy, onMount } from 'svelte';
   import { MpvJs } from 'mpv.js-vanilla';
-  import { PauseIcon, PlayIcon, MaximizeIcon } from 'svelte-feather-icons/src';
+  import {
+    PauseIcon,
+    PlayIcon,
+    MaximizeIcon,
+    MessageSquareIcon,
+    InfoIcon,
+  } from 'svelte-feather-icons/src';
   import Button from '../atoms/Button.svelte';
   import StreamSeeker from '../molecules/StreamSeeker.svelte';
   import { size } from '../../helpers/constants';
@@ -9,11 +15,49 @@
   // Define handler functions
   const handleMPVReady = (mpv: any) => {
     const observe = mpv.observe.bind(mpv);
-    ['pause', 'time-pos', 'duration', 'eof-reached'].forEach(observe);
+    [
+      'pause',
+      'time-pos',
+      'duration',
+      'eof-reached',
+      'track-list/count',
+    ].forEach(observe);
     mpv.property('hwdec', 'auto');
     mpvReady = true;
   };
   const handlePropertyChange = (name: string, value: any) => {
+    if (name === 'track-list/count') {
+      for (let i = 0; i <= value; ++i) {
+        mpv.observe(`track-list/${i}/id`);
+        mpv.observe(`track-list/${i}/type`);
+        mpv.observe(`track-list/${i}/lang`);
+        mpv.observe(`track-list/${i}/default`);
+        mpv.observe(`track-list/${i}/type`);
+        mpv.observe(`track-list/${i}/src`);
+        mpv.observe(`track-list/${i}/title`);
+        mpv.observe(`track-list/${i}/lang`);
+        mpv.observe(`track-list/${i}/selected`);
+      }
+      return;
+    }
+    if (/track-list\/\d+/.test(name)) {
+      // 'track-list/:index/:type'
+      const [, index, type] = name.split('/');
+
+      if (type === 'id') {
+        // we will store tracks in state object keyed by their track id
+        // create an index to id map so we have access to that id with just the track index
+        trackIndexToIdMap[index] = value;
+      }
+
+      const id = trackIndexToIdMap[index];
+
+      state.tracks[id] = {
+        ...(state.tracks[id] || {}),
+        [type]: value,
+      };
+      return;
+    }
     if (name === 'time-pos' && seeking) {
       return;
     } else if (name === 'eof-reached' && value) {
@@ -66,7 +110,9 @@
     'time-pos': 0,
     duration: 0,
     fullscreen: false,
+    tracks: {},
   };
+  let trackIndexToIdMap: { [index: string]: string } = {};
   let seeking = false;
 
   const mpv = new MpvJs(handleMPVReady, handlePropertyChange);
@@ -87,7 +133,6 @@
     document.removeEventListener('keydown', handleKeyDown, false);
     mpv.destroy();
   });
-
 </script>
 
 <style>
@@ -138,6 +183,18 @@
       on:start={handleSeekMouseDown}
       on:stop={handleSeekMouseUp}
     />
+    <Button tippyProps={{ content: streamUrl, interactive: true }}>
+      <InfoIcon size={size.u2} />
+    </Button>
+    <Button
+      on:click={() => {
+        const arr = Object.entries(state.tracks);
+        console.log(state.tracks, arr, arr[0]);
+        mpv.property('sid', Number(arr[0][0]));
+      }}
+    >
+      <MessageSquareIcon size={size.u2} />
+    </Button>
     <Button on:click={toggleFullscreen}>
       <MaximizeIcon size={size.u2} />
     </Button>
