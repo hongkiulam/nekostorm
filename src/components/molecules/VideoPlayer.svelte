@@ -1,7 +1,9 @@
 <script lang="ts">
   import { toasts } from "../../store/toasts";
   import { vlc } from "../../helpers/ipc";
+  import { size } from "../../helpers/constants";
   import Button from "../atoms/Button.svelte";
+  import { LinkIcon } from "svelte-feather-icons/src";
   export let streamUrl: string;
 </script>
 
@@ -19,10 +21,12 @@
     :global(button) {
       height: 100%;
     }
-  }
-  img {
-    height: var(--u);
-    margin-left: var(--u);
+    :global(img) {
+      margin-left: var(--u);
+    }
+    :global(svg) {
+      margin-left: var(--u);
+    }
   }
 </style>
 
@@ -31,7 +35,7 @@
 </video>
 <div class="video-footer">
   <Button
-    on:click={async () => {
+    on:click={() => {
       const { error } = vlc.play(streamUrl);
       if (error) {
         toasts.add({
@@ -43,6 +47,14 @@
     }}
   >
     Open in VLC
-    <img src="/img/vlc.svg" alt="vlc" height="10px" />
+    <img src="/img/vlc.svg" alt="vlc" height={size.u} />
+  </Button>
+  <Button
+    on:click={() => {
+      alert(streamUrl);
+    }}
+  >
+    Get stream url
+    <LinkIcon size={size.u} />
   </Button>
 </div>
