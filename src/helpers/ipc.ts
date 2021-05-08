@@ -5,4 +5,5 @@ const _window = window as WindowWithContextBridge;
 
 export const api = _window.api;
 export const wt = _window.wt;
-export const wtLocalStorage = _window['wt-localStorage']
+export const wtLocalStorage = _window['wt-localStorage'];
+export const vlc = _window.vlc;

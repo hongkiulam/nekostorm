@@ -126,19 +126,22 @@ contextBridge.exposeInMainWorld("wt", {
     directSaveListener = listener;
   },
   stream: (torrentId, fileIndex, response) => {
-    ipcRenderer.send('client>webtorrent:stream-start', torrentId, fileIndex);
+    ipcRenderer.send("client>webtorrent:stream-start", torrentId, fileIndex);
 
     const responseListener = (event, torrentKey, url) => {
       if (torrentId === torrentKey) {
         response(url);
-        ipcRenderer.removeListener('webtorrent>client:stream-start', responseListener);
+        ipcRenderer.removeListener(
+          "webtorrent>client:stream-start",
+          responseListener
+        );
       }
-    }
-    ipcRenderer.on('webtorrent>client:stream-start', responseListener);
+    };
+    ipcRenderer.on("webtorrent>client:stream-start", responseListener);
   },
   killStream: () => {
-    ipcRenderer.send('client>webtorrent:stream-end');
-  }
+    ipcRenderer.send("client>webtorrent:stream-end");
+  },
 });
 
 let progressListener = () => {};
@@ -153,4 +156,14 @@ let directSaveListener = () => {};
 ipcRenderer.on("main>client:wt-direct-save", (event, torrentKey, err) => {
   console.log("[wt-direct-save]", torrentKey);
   directSaveListener(torrentKey, err);
+});
+
+/**
+ * VLC
+ */
+contextBridge.exposeInMainWorld("vlc", {
+  play: (streamUrl) => {
+    const { error } = ipcRenderer.sendSync("client>main:vlc-play", streamUrl);
+    return { error };
+  },
 });

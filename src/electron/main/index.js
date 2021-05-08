@@ -2,6 +2,7 @@ const { app, BrowserWindow, dialog } = require("electron");
 const path = require("path");
 const client = require("./client");
 const webtorrent = require("./webtorrent");
+require('./vlc');
 const rimraf = require("rimraf");
 const os = require("os");
 const fs = require("fs");

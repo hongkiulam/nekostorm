@@ -1,6 +1,6 @@
-import type { APITorrent } from './api';
-import type { QueryObject } from './query';
-import type { WebTorrentIdMap } from './torrent';
+import type { APITorrent } from "./api";
+import type { QueryObject } from "./query";
+import type { WebTorrentIdMap } from "./torrent";
 
 export type WindowWithContextBridge = Window &
   typeof globalThis & {
@@ -34,8 +34,11 @@ export type WindowWithContextBridge = Window &
       ) => void;
       killStream: () => void;
     };
-    'wt-localStorage': {
-      setItem: Storage['setItem'];
+    "wt-localStorage": {
+      setItem: Storage["setItem"];
       getItem: (key: string, received: (value: string) => void) => void;
+    };
+    vlc: {
+      play: (streamUrl: string) => { error: string };
     };
   };

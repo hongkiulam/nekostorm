@@ -12,6 +12,7 @@
     list-style: none;
   }
   .file_button {
+    width: 100%;
     background: transparent;
     text-align: left;
     border-bottom: 1px solid var(--copy-primary);
