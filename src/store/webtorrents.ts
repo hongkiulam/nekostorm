@@ -1,11 +1,16 @@
-import type { WebTorrent, WebTorrentIdMap } from 'src/types/torrent';
-import { wt } from '../helpers/ipc';
-import { readable, writable } from 'svelte/store';
+import type { WebTorrent, WebTorrentIdMap } from "src/types/torrent";
+import { wt } from "../helpers/ipc";
+import { readable, writable } from "svelte/store";
+import { isElectron } from "../helpers/isElectron";
 
 export const webtorrents = readable<WebTorrentIdMap>({}, (set) => {
-  wt.progress((torrentIdMap) => {
-    set(torrentIdMap);
-  });
+  if (isElectron()) {
+    wt.progress((torrentIdMap) => {
+      set(torrentIdMap);
+    });
+  } else {
+    set({});
+  }
 });
 
 export const webtorrentsOverTime = writable<{
