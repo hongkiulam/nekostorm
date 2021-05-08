@@ -2,7 +2,6 @@
   import { onDestroy } from 'svelte';
   import { wt } from '../../helpers/ipc';
 
-  import MPV from '../organisms/MPV.svelte';
   import TorrentFileList from '../organisms/TorrentFileList.svelte';
   import MainLayout from '../templates/MainLayout.svelte';
   export let params: { id: string; fileIndex: string };
@@ -38,13 +37,11 @@
       grid-auto-flow: row;
     }
   }
-
   .aspect-ratio {
-    --video-control-bar-height: var(--u3);
     position: relative;
     height: auto;
     width: 100%;
-    padding-bottom: calc(56.25% + var(--video-control-bar-height));
+    padding-bottom: 56.25%;
   }
 
   .video-placeholder {
@@ -65,11 +62,7 @@
   <article>
     <div class="aspect-ratio">
       <div class="video-placeholder">
-        {#if streamUrlLoading}
-          <span>Loading...</span>
-        {:else}
-          <MPV {streamUrl} />
-        {/if}
+        <span>{streamUrlLoading ? 'Loading...' : streamUrl}</span>
       </div>
     </div>
     <TorrentFileList {torrentId} bind:fileIndex={selectedFileIndex} />
