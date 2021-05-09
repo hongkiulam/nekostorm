@@ -28,6 +28,15 @@ You can download Nekostorm [here](https://github.com/hongkiulam/nekostorm/releas
 
 > All content available through Nekostorm are hosted on servers and databases externally, they are pulled in via external APIs and scrapers i.e. AnimeTosho, Nyaa.net and Nyaa.si. Any content downloaded/ watched with this app is the sole responsibility of the user, the developer makes no liabilities for infringements committed by a 3rd party.
 
+
+#### Screenshots
+
+![Search](./screenshots/search.png)
+![Starred](./screenshots/starred.png)
+![Torrents](./screenshots/torrents.png)
+![Torrent Detail](./screenshots/detail.png)
+![Stream](./screenshots/stream.png)
+
 #### Development
 
 Run `npm start` for a basic Snowpack development server. Hosted on port `8080`
