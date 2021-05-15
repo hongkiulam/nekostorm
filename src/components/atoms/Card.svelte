@@ -22,6 +22,7 @@
     cursor: pointer;
     box-shadow: 0px 0px 10px transparent;
     transition: box-shadow 0.3s ease;
+    width: 100%;
     &:hover {
       box-shadow: 0px 0px 0px 1px var(--card-color);
     }

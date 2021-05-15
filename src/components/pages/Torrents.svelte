@@ -38,7 +38,7 @@
       >
         {#each _torrents as torrent (torrent?.searchResult?.id)}
           {#if torrent?.searchResult?.id}
-            <TorrentCard {torrent} />
+            <div><TorrentCard {torrent} /></div>
           {/if}
         {/each}
       </Masonry>

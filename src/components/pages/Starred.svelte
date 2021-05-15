@@ -38,7 +38,7 @@
       breakAt={{ 1300: 4, 1100: 3, 900: 2, 700: 1 }}
     >
       {#each $savedSearches as sS (objToQueryString(sS))}
-        <StarredCard search={sS} />
+        <div><StarredCard search={sS} /></div>
       {/each}
     </Masonry>
   {:else}

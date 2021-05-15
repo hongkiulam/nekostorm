@@ -1,32 +1,28 @@
 <script lang="ts">
+  import { Macy } from "svelte-macy";
+  import type { MacyInstance } from "svelte-macy";
   import { size } from "../../helpers/constants";
-  import Macy from "macy";
-  import { onDestroy, onMount } from "svelte";
 
   export let disableScroll = false;
   export let recalculate = () => {};
   export let columns: number;
   export let breakAt: { [key: number]: number } = {};
 
-  let macy: any;
-  onMount(() => {
-    macy = Macy({
-      container: "#masonry",
-      trueOrder: true,
-      margin: Number(size.u),
-      columns,
-      breakAt,
-    });
-    recalculate = () => macy?.recalculate(true);
-  });
+  let options = {
+    trueOrder: true,
+    margin: Number(size.u),
+    columns,
+    breakAt,
+  };
+  let macy: MacyInstance;
 
-  onDestroy(() => {
-    macy?.remove();
-  });
+  $: {
+    recalculate = () => macy?.recalculate(true);
+  }
 </script>
 
 <style>
-  #masonry {
+  :global(#macy) {
     margin: var(--u);
   }
   .scroll-container {
@@ -39,7 +35,7 @@
 </style>
 
 <div class="scroll-container" class:disableScroll>
-  <div id="masonry">
+  <Macy {options} bind:macy>
     <slot />
-  </div>
+  </Macy>
 </div>
